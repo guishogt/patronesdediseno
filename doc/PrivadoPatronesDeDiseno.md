@@ -18,7 +18,7 @@ En sí, un patrón de diseño es una solución puntual a un problema común y re
 
 La solidificación del concepto se dio en 1994, cuando Erich Gamma, Richard Helm, Ralph Johnson y John Vlissides (conocidos como "the gang of four (GoF)", o “la mara de los cuatro”) publicó el famoso libro “Design Patterns: Elements of Reusable Object-Oriented Software” (Patrones de diseño: elementos reusables para software orientado a objetos). A partir de ahí el concepto se popularizó, y las herramientas de desarrollo comienzan a incorporar el uso de patrones por todos lados, apareciendo el concepto de “refactorizar”, que es el concepto de aplicar patrones de diseño a software ya existente. 
 
-3.  Patrones Creacionales. 
+#3.  Patrones Creacionales. 
 
 Los patrones creacionales son los primeros que se abordarán, ya que naturalmente son los que aparecen inicialmente en las distintas etapas de desarrollo. 
 
@@ -82,6 +82,7 @@ public class PaqueteDeHosting {
 
 Bien, ahora cada plan tiene una configuración previamente establecida, que el vendedor no arma en el momento, y que preferiblemente no puede cambiar. ¿Cómo se puede hacer para crear cada objeto? La primera manera que se suele proponer es crear un constructor para cada caso, manteniendo siempre los valores obligatorios. Esto resultaría en  una colección de constructores como la siguiente:
 
+```java
     public PaqueteDeHosting(String nombre, BigDecimal precioAnual, int almacenamiento, int transferencia, int cantidadCorreos) {
 
         this.nombre = nombre;
@@ -146,9 +147,9 @@ Bien, ahora cada plan tiene una configuración previamente establecida, que el v
 
     }
 
-....
+```
 
-TAJUMULCO
+
 
 Como se observa, sólo se hicieron  un par de combinaciones con la cantidad de bases de datos y la IP pública. Mientras la cantidad de campos opcionales crece, la cantidad de constructores aumenta desmedidamente creando el ambiente ideal para que aparezcan errores.
 
@@ -156,6 +157,8 @@ Otro camino que se puede tomar es el clásico *bean*: un constructor vacío y *s
 
 En PaqueteDeHosting se hace un constructor con los campos que siempre van para evitar estados inconsistentes:
 
+
+```java
     public PaqueteDeHosting(String nombre, BigDecimal precioAnual, int almacenamiento, int transferencia, int cantidadCorreos) {
 
         this.nombre = nombre;
@@ -169,9 +172,11 @@ En PaqueteDeHosting se hace un constructor con los campos que siempre van para e
         this.cantidadDireccionesCorreo = cantidadCorreos;
 
     }
+```
 
 Y se crea el *builder*:
 
+```java
 package com.guisho.software.patrones.builder;
 
 import java.math.BigDecimal;
@@ -251,9 +256,11 @@ public class PaqueteDeHostingBuilder {
     }
 
 }
+```
 
 Si se observa el *builder* simplemente envuelve al objeto que creará, con una especie de métodos de acceso (parecido a un *JavaBean*) pero con la peculiaridad que se devuelve a sí mismo siempre. ¿En qué ayuda esto? Véase el cliente como crea un PaqueteDeHosting ahora:
 
+```java
     public static void main(String[] args) {
 
         PaqueteDeHosting personal = new PaqueteDeHostingBuilder("personal",new BigDecimal(100),10,100,1).build();
@@ -271,6 +278,8 @@ Si se observa el *builder* simplemente envuelve al objeto que creará, con una e
         new PaqueteDeHostingBuilder("oro",new BigDecimal(500),100,4000,100).accessoSsh(true).catidadSitiosPermitidos(100).cantidadBaseDeDatos(5).ipPublica("10.10.10.10").build();
 
     }
+```
+
 
 Esto es mucho más sencillo de leer (aparte que la línea se alarga un poco, aunque pueden hacecer varias líneas), y deja al objeto siempre en un estado consistente. Este método de construcción por medio de llamadas encadenadas se llama interfaces fluidas, y es el punto de inicio para muchos lenguajes como *Groovy*, que crean construcciones bastantes complejas a partir de *builders* sencillos que permiten muchas configuraciones.
 
@@ -295,6 +304,8 @@ Como todo se entiende mejor con un ejemplo -al menos eso creo yo-, comenzaremos 
  
 
 Una manera de entrarle al problema podría ser algo así:
+
+```java
 
 public class MainClient {
 
@@ -347,7 +358,6 @@ public MainClient(){
 		}
 
 	}//traducirNumero
-
        
 
 public static void main(String args[]){
@@ -359,6 +369,7 @@ System.out.println(mc.traducirNumero("espanol",1));
 }
 
 }//de la clase
+```
 
  El resultado del código anterior, como ya sabrán, es uno.
 
@@ -366,15 +377,18 @@ Esta solución parece funcionar, y de hecho lo hace. Pero imaginemos que ahora n
 
 Como nos gusta hacer gala de nuestro enfoque a objetos, los primero que se nos ocurre es una herencia. Definiremos una clase abstracta Traductor, y para cada idioma haremos una subclase de Traductor.
 
- 
+ ```Java
 
 public abstract class Traductor{
 
    public abstract String traducirNumero(int numero);
 
 }
+```
 
 Y ahora comienza la magia a aparecer. Vamos a crear una clase especializada para diccionario, que se encargará de traducir los números. Tendremos una clase especializada para traducir los números al español, que iría algo así:
+
+```java
 
 public class TraductorEspanol extends Traductor {
 
@@ -401,9 +415,11 @@ public class TraductorEspanol extends Traductor {
     }	
 
 }
+```
 
 La clase para el inglés iría
 
+```java
 public class TraductorIngles extends Traductor {
 
     public TraductorIngles(){
@@ -429,8 +445,11 @@ public class TraductorIngles extends Traductor {
     }	
 
 }
+```
 
 Y la del alemán no la ponemos, porque ya captaron la idea. Ahora, en el momento de querer utilizar un diccionario, se llamaría algo así
+
+```
 
 Traductor t = new TraductorEspanol();
 
@@ -477,10 +496,13 @@ public class MainClient {
      }
 
 }//de la clase
+```
 
 Qué hemos ganado? Primero, nuestro código es mucho más legible. Segundo es bastante más escalable. Podemos agregar el traductor para el francés muy fácilmente. Tercero hemos escondido la manera en la que traducimos a Tradúceme. Por ejemplo, puede ser que las traducciones a chino las vayamos a traer a un web Service. En ese caso TraductorChino se encargaría de hacer todo el ajetreo de conectarse a internet y buscar el web services, pero los demás ni se enteran.
 
 Pero el Factory Pattern no ha aperecido, Es tiempo de irlo a llamar. Bueno, Traduceme está haciendo algo que no le compete: está eligiendo la instancia de Traductor que quiere usar. Imaginen que se usa el traductor en 100 lugares, entonces en cien lugares se tiene que buscar qué clase de Traductor vamos a instanciar. El patrón de fábrica -factory pattern- nos esconde esa lógica. Vamos a agregar ahora nuestra fábrica de traductores.
+
+```java
 
 public class TraductorFactory {
 
@@ -516,8 +538,11 @@ public class TraductorFactory {
 
 }//de la clase
 
+```
+
 ¿Qué hace TraductorFactory? Simplemente elige, en base a los argumentos dados – en este caso el idioma- qué clase de traductor se instanciará. Traduceme de nuevo cambia y quedaría así:
 
+```java
 public class MainClient {
 
      String idioma;
@@ -531,6 +556,7 @@ public class MainClient {
 	}//main
 
 }//de la clase
+```
 
 MainClient se ha visto dramáticamente reducido, y su código es muy fácil de leer. Quien quiera usar un traductor simplemente hará llamar a Traduceme. Traduceme sabe el idioma que eligieron, pero no sabe que subclase de Traductor instanciar, pero sabiendo el idioma TraductorFactory sabe exáctamente qué instancia de Traductor crear. Si la aplicación desea cambiar de idioma simplemente le envía otro parámetro a Traduceme y listo. También agregar idiomas es más manejable que antes. 
 
@@ -552,6 +578,8 @@ Básicamente lo que hace el este patrón es unir varios Factory Methods, delegan
 
 Primero vamos hacer un sencillo reloj que nos muestra la hora actual. Como sabemos, la hora puede ser desplegada en formato de 24Hrs o puede ser desplegada en formato AM/PM. Recordando que es a manera de ejemplo, vamos a utilizar la clase Date de una manera que no se debe, y probablemente el reloj lo haríamos de una manera más sencilla, pero para nuestro ejemplo queda perfecta su uso. Como en el caso del diccionario, haremos una clase abstracta de Reloj y dos implementaciones para cada una de los formatos, y una clase que contenga el método del Factory Method. La cosa quedaría algo así:
 
+```java
+
 La clase Reloj:
 
 public abstract class Reloj {
@@ -560,8 +588,10 @@ public abstract class Reloj {
 
 }
 
+```
 La clase que se da la hora en formato AM/PM:
 
+```java
 public class RelojAmPm extends Reloj{
 
     public RelojAmPm(){
@@ -595,8 +625,11 @@ public class RelojAmPm extends Reloj{
     }
 
 }
+```
 
 La que nos da la hora en formato de 24 horas:
+
+```java
 
 public class Reloj24Hrs extends Reloj {
 
@@ -619,8 +652,11 @@ public class Reloj24Hrs extends Reloj {
     }
 
 }
+```
 
 Nuestra clase que contiene la el método que elije las instancias. A diferencia del post anterior, ahora el parámetro que recibe el método es un entero, que acepta los enteros especificados como constantes estáticas en la clase. Esto se usa mucho para no estar adivinando los paráemetros que acepta el método:
+
+```java
 
 public class RelojFactory {
 
@@ -651,8 +687,11 @@ public class RelojFactory {
     }
 
 }
+```
 
 Y finalmente la clase cliente, que será la usuario final:
+
+```java
 
 public class MainClient {
 
@@ -665,11 +704,13 @@ public class MainClient {
     }
 
 }
+```
 
 Hasta aquí tenemos dos fábricas: una de palabras, y la que acabamos de hacer que nos da la hora. En un proyecto cualquiera se nos pide hacer un sistema que despliegue la hora y los números de la manera en la que se expresan en cada país (una implementación súper elemental de Locale de Java). Vamos con dos ejemplos prácticos. En Estados Unidos se despliegan los números en inglés, y la hora en formato AM/PM; mientras que en Guatemala se dicen los números en español y la hora en formato de 24 Horas.
 
 Ahora vamos a crear una Abstract Factory, que le pondremos Locale.
 
+```java
 public abstract class AbstractLocaleFactory {
 
     public static final String US="ESTADOS_UNIDOS";
@@ -695,10 +736,13 @@ public abstract class AbstractLocaleFactory {
     }
 
 }
+```
 
 Como ven esta fabrica tiene un par de métodos que devuelven un Reloj y un Traductor. Noten que Reloj y Traductor son a su vez clases abstractas.
 
 Ahora implementamos nuestra clase LocaleGuatemalaFactory, que va así:
+
+```java
 
 public class LocaleGuatemalaFactory extends AbstractLocaleFactory{
 
@@ -721,9 +765,11 @@ public class LocaleGuatemalaFactory extends AbstractLocaleFactory{
     }
 
 }
+```
 
 Y la respectiva para Estados Unidos:
 
+```java
 public class LocaleEstadosUnidosFactory extends AbstractLocaleFactory{
 
     public LocaleEstadosUnidosFactory(){
@@ -745,9 +791,11 @@ public class LocaleEstadosUnidosFactory extends AbstractLocaleFactory{
     }
 
 }
+```
 
 Ahora en el cliente, si queremos las cosas como se verían en Guatemala, simplemente hacemos esto.
 
+```java
 public class MainClient {
 
     public static void main(String[] args) {
@@ -771,26 +819,35 @@ public class MainClient {
     }
 
 }
+```
 
 El resultado de correr el codigo anterior es:
+```
 
 1=uno
 
 Son las 21:50:17
 
+```
 Ahora si cambiamos la linea
+```java
 
         AbstractLocaleFactory localeFactory = new LocaleGuatemalaFactory();
+```        
 
 Por esta
 
+```java
         AbstractLocaleFactory localeFactory = new LocaleEstadosUnidosFactory();
+```
 
 Tendremos como resultado:
+```
 
 1=one
 
 9:52:56 PM
+```
 
 Aquí es un ejemplo sencillo. Pero imaginen quedemos hacer un Locale para cada país, y en el locale tener más cosas como: la nomenclatura de moneda, el sistema de numeración, el manejo de fechas, kilómetros o millas, etc. Con el Abstract Factory Pattern es muy sencillo agregar cada nuevo pais, o cada nueva característica del Locale. Pero sobre todo el código es MUY legible y FACILMENTE extensible. Alguien que nunca ha visto estas piezas de código puede entender como hacer un nuevo país.
 
@@ -802,6 +859,7 @@ Ya casi terminando con los patrones creacionales, vamos a hablar hoy sobre el pr
 
 Este patrón es facilito, ya lo veremos. En el caso específico de Java ya se tiene mucho camino ganado, porque Java provee la interaz clonable con el propósito de crear clones en mente. Pero vamos a hacer también una implementación sin usar esta interfaz para comprender completamente la idea detrás del prototipo. La primera manera de implementar este patrón en Java es implementando la interfaz Cloneable. Mas abajo veremos otra forma de implementarlo, que es haciéndolo a mano, con una ventaja extra: en vez de crear referencias a los objetos contenidos, podemos crear objetos nuevos, que en muchos cosas nos puede ser de utilidad. Por ahora veamos un un ejemplo sencillo usando cloneable:
 
+```java
   public class Copiame implements Cloneable {
 
 			Object clone = null;
@@ -819,12 +877,15 @@ Este patrón es facilito, ya lo veremos. En el caso específico de Java ya se ti
 			return clone;
 
   }
+  ```
 
 Expliquemos un poco. Clonable es una interfaz vacía, pero para utilizar super.clone() tenemos que implementar cloneable si no quere mos una CloneNoSupportedException. La segunda cosa a considerar es que clone hace una copia de los valores de los campos de un objeto, no de los objetos a los que apunta. En otras palabras, el objeto clonado apuntará a los mismos objetos que el objeto antiguo apuntaba. Otra cosa a tomar en cuenta es que clone() devuelve siempre un Object. También notemos que clone es un método protected que puede ser llamado solo por la misma clase o el paquete que la contiene.
 
 Entonces, ¿para qué nos sirve clonar objetos? Bueno, nos sirve para copiar objetos que tardan mucho en crear, o que son complejos de crear. Por ejemplo una lista grande que es costoso en tiempo obtener y que se desea ordenar de dos maneras distintas.
 
 De nuevo nos adentraremos con un ejemplo, que sigo pensando es la mejor manera de aprender. Para nuestro ejemplo vamos a hacer una clase Persona y luego llenar la persona con los datos de dos hermanos: Juan y María que serán ingresados a un sistema x.
+
+```java
 
 package com.guisho.software.patrones.prototype;
 
@@ -863,9 +924,11 @@ public class Persona implements Cloneable{
 /*Setters y geters....*/
 
 }
+```
 
 Y un cliente que crea la Persona:
 
+```java
     public static void main(String[] args) {
 
         Persona juan = new Persona();
@@ -901,8 +964,11 @@ Y un cliente que crea la Persona:
         //ingresar a Maria al sistema....
 
     }
+```
 
 Como vemos, ahora no se tuvieron que ingresar todos los campos de María sino, solo aquellos que la diferenciaban de su hermano Juan. Hay que recordar que si hubiesen objetos en el ejemplo estos se clonan por referencia, es decir las referencias de ambos objetos son las mismas. Ahora vamos a vamos a implementar la clonación a mano. Le vamos a añadir a Persona este método:
+
+```java
 
     public Persona creaPrototipo(){
 
@@ -931,10 +997,14 @@ Como vemos, ahora no se tuvieron que ingresar todos los campos de María sino, s
         return p;
 
     }
+```
 
 Entonces en el cliente podemos hacer esta llamada
 
+```java
+
         Persona maria = juan.creaPrototipo();
+```        
 
 Como vemos, el patrón prototipo es sencillo: crear una copia de un objeto para ahorrarnos los pasos de su creación, o para optimizar accesos o procesos que ya se hicieron en un objeto similar y crear una copia del objeto ya con esos datos ingresados.
 
@@ -949,6 +1019,8 @@ Siempre que se crea un objeto nuevo (en Java con la palabra reservada new) se in
 En los patrones anteriores utilizamos un Traductor. Imaginemos que el traductor carga a memoria no sólo números, pero también diez mil palabras obtenidas a través de un archivo de texto o un web service. Cada vez que este objeto se cree utilizará mucho espacio en memoria. Además, si se usa un web services para cargarlo, cada carga consume muchos recursos de red y tarda mucho en terminarse de construir. 
 
 Traductor estará disponible para toda la aplicación, y en cualquier lado que se despliegue un texto será invocado. No tendría mucho sentido construir un Traductor cada vez que lo querramos utilizar. Lo más sano sería utilizar un sólo Traductor para toda la aplicación. ¿Cómo lograrlo? A través de un Singleton. Omitiendo la lógica del objeto, el código que se debería usar quedaría algo así:
+
+```java
 
 public class Traductor{
 
@@ -989,6 +1061,7 @@ public class Traductor{
     } 
 
 }
+```
 
 En cualquier lugar de la aplicacion que se quiera utilizar hacer una traducción se hace esto:
 
@@ -996,11 +1069,15 @@ Traductor.getTraductor().translate("unaPalabra");
 
 ¿Qué logramos con esto? Que alguien que utilice nuestro código no pueda hacer esto
 
+```java
 Traductor t = new Traductor();
+```
 
 Es un gran beneficio porque podemos controlar mejor, cambiarla en el futuro, optimizarla, a Traductor. Evita malos usos de la clase y se nos asegura que a lo más hay una instancia del objeto en toda la aplicación.
 
 Las cosas no son tan fáciles como parecen. Hay muchas maneras de crear los Singletons. En este ejemplo utilizamos un booleano estático, pero no siempre es necesario, pudimos haber inicializado traductorInstance como null, y en vez de verificar la variable booleana, verificar si la instancia es null o no.
+
+```java
 
 public class Traductor{
 
@@ -1037,8 +1114,11 @@ public class Traductor{
     } 
 
 }
+```
 
 O, para hacer las cosas más fáciles (que no siempre conviene, jeje) podríamos evitar la evaluación en getTraductor y crear el objeto cuando lo declaramos:
+
+```java
 
 public class Traductor{
 
@@ -1069,9 +1149,12 @@ public class Traductor{
     } 
 
 }
+```
+
 
 Fácil ¿no? Mmm, pues se puede complicar. En Java por ejemplo, todavía se podría obtener una copia de traductor así:
 
+```java
 Traductor t = (Traductor)Traductor.getTraductor().clone();
 
 Para evitar esto tendríamos que añadir las siguietnes líneas a nuestra clase Traductor
@@ -1081,6 +1164,8 @@ Para evitar esto tendríamos que añadir las siguietnes líneas a nuestra clase 
          throw new CloneNotSupportedException();
 
        }
+       
+```       
 
 También alguien podría extender la clase y volver público el constructor. Para evitar esto sería buena idea declarar nuestra clase como final.
 
@@ -1088,7 +1173,7 @@ Hay que tener especial cuidado cuando el Singleton se utiliza en un ambiete mult
 
 Concluyendo, la idea central del Singleton es esa: asegurar de que exista tan solo una instancia del objeto en toda la aplicación. Hay muchas maneras de implementar un Singleton (aquí solo vimos algunas). Es un patrón muy aplicado en Java, aunque, como todos los patrones, se puede implementar en cualquier lenguaje orientado a objetos. También se pueden hacer cosas interesantes uniendo el Singleton con otros patrones creacionales (recordemos que el singleton no busca crear, sino que limitar la creación).
 
-4.  Patrones Estructurales. 
+#4.  Patrones Estructurales. 
 
 imos ya los patrones creacionales más importantes. No son todos, en el futuro veremos más, pero son los más usados y los más importantes. Ahora comenzamos con una nueva fase: Los patrones estructurales. Los patrones estructurales (structural patterns) podrían llamarse patrones de relaciones, o algo parecido, porque su principal función es facilitar y mejorar las relaciones entre objetos.
 
@@ -1108,291 +1193,315 @@ Así que comenzamos con los patrones estructurales. Encendamos motores y prepare
 
 ## 4.3  Adapter
 
-## El patrón estructural que ahora vamos a analizar es muy eficaz así como sencillo. Se puede utilizar en muchos contextos y es de especialidad utilidad cuando se utilizan códigos o librerías ajenos al que estamos utilizando y sobre el que no tenemos control. Este patrón se le conoce como adaptador o adapter en inglés, aunque algunos lo llaman también wrapper, que viene siendo como envoltorio. Ambos nombres tienen bastante sentido y explican el por qué de este patrón.
+ El patrón estructural que ahora vamos a analizar es muy eficaz así como sencillo. Se puede utilizar en muchos contextos y es de especialidad utilidad cuando se utilizan códigos o librerías ajenos al que estamos utilizando y sobre el que no tenemos control. Este patrón se le conoce como adaptador o adapter en inglés, aunque algunos lo llaman también wrapper, que viene siendo como envoltorio. Ambos nombres tienen bastante sentido y explican el por qué de este patrón.
 
-## Antes de comenzar con código o parecido, pensemos en este problema. En muchos países se utilizan las espigas redondas en los tomacorrientes, y en otros las espigas planitas. En ocasiones tenemos un dispositivo que tiene 3 espigas y el tomacorrientes 2. Sin embargo sabemos que el aparato que deseamos conectar "entiende" la corriente eléctrica, “la acepta”, aunque la interfaz para conectarse a ella sea una distinta a la que posee. ¿Qué hacemos en estos casos? Usamos un adaptador! O un convertidor, o un transformador, cómo le querramos llamar.  Pues lo mismo sucede con el software. Sucede a menudo que nos encontramos con librerías que pueden sernos de utilidad, pero que existe la necesidad de adaptarnos a ellas. En esos casos tenemos dos opciones: modificar todo nuestro código para que se adapte a la librería, o podemos crear un adaptadro que traduzca lo nuestro a lo de ellos y lo de ellos a lo nuestro. Un ejemplo sencillo en el mundo Java es el de los Enumeration y los Iterators. Ambos tienen un hasNext()  o  un hasMoreElements() que hacen lo mismo; al igual que un next() y un nextElement() que hacen lo mismo. Imaginemos todo lo queremos manejar con Iterators, podemos crear un adaptador que nos “convierta” entre Iterator y Enumeration.
+ Antes de comenzar con código o parecido, pensemos en este problema. En muchos países se utilizan las espigas redondas en los tomacorrientes, y en otros las espigas planitas. En ocasiones tenemos un dispositivo que tiene 3 espigas y el tomacorrientes 2. Sin embargo sabemos que el aparato que deseamos conectar "entiende" la corriente eléctrica, “la acepta”, aunque la interfaz para conectarse a ella sea una distinta a la que posee. ¿Qué hacemos en estos casos? Usamos un adaptador! O un convertidor, o un transformador, cómo le querramos llamar.  Pues lo mismo sucede con el software. Sucede a menudo que nos encontramos con librerías que pueden sernos de utilidad, pero que existe la necesidad de adaptarnos a ellas. En esos casos tenemos dos opciones: modificar todo nuestro código para que se adapte a la librería, o podemos crear un adaptadro que traduzca lo nuestro a lo de ellos y lo de ellos a lo nuestro. Un ejemplo sencillo en el mundo Java es el de los Enumeration y los Iterators. Ambos tienen un hasNext()  o  un hasMoreElements() que hacen lo mismo; al igual que un next() y un nextElement() que hacen lo mismo. Imaginemos todo lo queremos manejar con Iterators, podemos crear un adaptador que nos “convierta” entre Iterator y Enumeration.
 
-## Vamos con el usual ejemplo. Imaginemos tenemos un sistema que maneja coches, barcos, aviones y parecidos. Generalmente los motores que se usan son de gasolina, pero las nuevas tendencias han popularizado los motores eléctricos. Para simplificar mi caso y mostra bien el punto, tenemos que el proveedor de vehículos eléctricos nos provee sus librerías para el motor eléctrico que es prácticamente igual a nuestras implementaciones pero con otros nombres (prender en vez de encender, "mover más rápido" en vez de acelerar, etc.), y tiene una restricción extra: para poder acelerar o detener el motor, este tiene que estar conectado. Y surge el problema ¿cómo hacemos para nuestras librerías puedan hacer uso del motor eléctrico? Podríamos reescribirlas todas, pero el tiempo que eso nos tomaría sería mucho. Además sabemos que existirían problemas que nuestras librerías ya han solucionado.
+ Vamos con el usual ejemplo. Imaginemos tenemos un sistema que maneja coches, barcos, aviones y parecidos. Generalmente los motores que se usan son de gasolina, pero las nuevas tendencias han popularizado los motores eléctricos. Para simplificar mi caso y mostra bien el punto, tenemos que el proveedor de vehículos eléctricos nos provee sus librerías para el motor eléctrico que es prácticamente igual a nuestras implementaciones pero con otros nombres (prender en vez de encender, "mover más rápido" en vez de acelerar, etc.), y tiene una restricción extra: para poder acelerar o detener el motor, este tiene que estar conectado. Y surge el problema ¿cómo hacemos para nuestras librerías puedan hacer uso del motor eléctrico? Podríamos reescribirlas todas, pero el tiempo que eso nos tomaría sería mucho. Además sabemos que existirían problemas que nuestras librerías ya han solucionado.
 
-## Como nos gusta ser elegantes en nuestro uso de objetos, hace muchos años creamos una clase abstracta (pensamos también hacer una interfaz, pero la clase abstracta nos provee otros métodos útiles):
+Como nos gusta ser elegantes en nuestro uso de objetos, hace muchos años creamos una clase abstracta (pensamos también hacer una interfaz, pero la clase abstracta nos provee otros métodos útiles):
 
-## package com.guisho.software.patrones.adapter;
+```java
 
-## public abstract class Motor {
+ package com.guisho.software.patrones.adapter;
 
-##    abstract public void encender();
+ public abstract class Motor {
 
-##    abstract public void acelerar();
+    abstract public void encender();
 
-##    abstract public void apagar();
+    abstract public void acelerar();
 
-##    //...mas metodos que hacen muchas cosas
+    abstract public void apagar();
 
-## }
+    //...mas metodos que hacen muchas cosas
 
-## Y tenemos nuestras implementaciones de algunos motores, por ejemplo el motor económico:
+ }
+ ```
 
-## package com.guisho.software.patrones.adapter;
+ Y tenemos nuestras implementaciones de algunos motores, por ejemplo el motor económico:
+ 
+ ```java
 
-## public class MotorEconomico extends Motor {
+ package com.guisho.software.patrones.adapter;
 
-##     public MotorEconomico(){
+ public class MotorEconomico extends Motor {
 
-##         super();
+     public MotorEconomico(){
 
-##         System.out.println("Craendo motor economico");
+         super();
 
-##     }
+         System.out.println("Craendo motor economico");
 
-##     public void encender() {
+     }
 
-##         System.out.println("Encendiendo motor economico.");
+     public void encender() {
 
-##     }
+         System.out.println("Encendiendo motor economico.");
 
-##     public void acelerar() {
+     }
 
-##         System.out.println("Acelerando motor economico.");
+     public void acelerar() {
 
-##     }
+         System.out.println("Acelerando motor economico.");
 
-##     public void apagar() {
+     }
 
-##         System.out.println("Apagando motor economico.");
+     public void apagar() {
 
-##     }
+         System.out.println("Apagando motor economico.");
 
-## }
+     }
 
-## Y el motor gastón (que ya no se vende tanto!):
+ }
+```
 
-## package com.guisho.software.patrones.adapter;
+ Y el motor gastón (que ya no se vende tanto!):
+ 
+ ```java
 
-## public class MotorGaston extends Motor {
+ package com.guisho.software.patrones.adapter;
 
-##     public MotorGaston(){
+ public class MotorGaston extends Motor {
 
-##         super();
+     public MotorGaston(){
 
-##         System.out.println("Creando el motor gaston");
+         super();
 
-##     }
+         System.out.println("Creando el motor gaston");
 
-##     public void encender() {
+     }
 
-##         System.out.println("Bum, bum....encendiendo motor gaston");
+     public void encender() {
 
-##     }
+         System.out.println("Bum, bum....encendiendo motor gaston");
 
-##     public void acelerar() {
+     }
 
-##         System.out.println("Buuuuuuuuuuuum, acelerando y gastando muuuucha gas");
+     public void acelerar() {
 
-##     }
+         System.out.println("Buuuuuuuuuuuum, acelerando y gastando muuuucha gas");
 
-##     public void apagar() {
+     }
 
-##         System.out.println("Apagando motor gaston");
+     public void apagar() {
 
-##     }
+         System.out.println("Apagando motor gaston");
 
-## }
+     }
 
-## Estas clases siempre nos han funcionado bien, y de hecho tienen muchas cosas como servicios, mantenimientos y otros, que usamos gracias a la interfaz motor. Por ejemplo es común que usemos cosas como estás:
+ }
+```
 
-##         Motor motor = new MotorEconomico();
+ Estas clases siempre nos han funcionado bien, y de hecho tienen muchas cosas como servicios, mantenimientos y otros, que usamos gracias a la interfaz motor. Por ejemplo es común que usemos cosas como estás:
+ 
+ ```java
 
-##         motor.encender();
+         Motor motor = new MotorEconomico();
 
-##         motor.acelerar();
+         motor.encender();
 
-##         motor.apagar();
+         motor.acelerar();
 
-##        //hacer mas cosas....
+         motor.apagar();
 
-##         motor = new MotorGaston();
+        //hacer mas cosas....
 
-##         motor.encender();
+         motor = new MotorGaston();
 
-##         motor.acelerar();
+         motor.encender();
 
-##         motor.apagar();
+         motor.acelerar();
 
-## Ahora la empresa que construye motores eléctricos nos manda su propia implementación que va así:
+         motor.apagar();
+         
+```         
 
-## public class MotorElectrico {
+ Ahora la empresa que construye motores eléctricos nos manda su propia implementación que va así:
 
-##     private boolean conectado = false;
+```java
+ public class MotorElectrico {
 
-##     public MotorElectrico() {
+     private boolean conectado = false;
 
-##         System.out.println("Creando motor electrico");
+     public MotorElectrico() {
 
-##         this.conectado = false;
+         System.out.println("Creando motor electrico");
 
-##     }
+         this.conectado = false;
 
-##     public void conectar() {
+     }
 
-##         System.out.println("Conectando motor eléctrico");
+     public void conectar() {
 
-##         this.conectado = true;
+         System.out.println("Conectando motor eléctrico");
 
-##     }
+         this.conectado = true;
 
-##     public void activar() {
+     }
 
-##         if (!this.conectado) {
+     public void activar() {
 
-##             System.out.println("No se puede activar porque no esta conectado el motor electrico");
+         if (!this.conectado) {
 
-##         } else {
+             System.out.println("No se puede activar porque no esta conectado el motor electrico");
 
-##             System.out.println("Esta conectado, activando motor electrico....");
+         } else {
 
-##         }
+             System.out.println("Esta conectado, activando motor electrico....");
 
-##     }
+         }
 
-##     public void moverMasRapido() {
+     }
 
-##         if (!this.conectado) {
+     public void moverMasRapido() {
 
-##             System.out.println("No se puede mover rapido el motor electrico porque no esta conectado...");
+         if (!this.conectado) {
 
-##         } else {
+             System.out.println("No se puede mover rapido el motor electrico porque no esta conectado...");
 
-##             System.out.println("Moviendo mas rapido...aumentando voltaje");
+         } else {
 
-##         }
+             System.out.println("Moviendo mas rapido...aumentando voltaje");
 
-##     }
+         }
 
-##     public void detener() {
+     }
 
-##         if (!this.conectado) {
+     public void detener() {
 
-##             System.out.println("No se puede detener motor electrico porque no esta conectado");
+         if (!this.conectado) {
 
-##         } else {
+             System.out.println("No se puede detener motor electrico porque no esta conectado");
 
-##             System.out.println("Deteniendo motor electrico");
+         } else {
 
-##         }
+             System.out.println("Deteniendo motor electrico");
 
-##     }
+         }
 
-##     public void desconectar() {
+     }
 
-##         System.out.println("Desconectando motor electrico...");
+     public void desconectar() {
 
-##         this.conectado = false;
+         System.out.println("Desconectando motor electrico...");
 
-##     }
+         this.conectado = false;
 
-## }
+     }
 
-## Como vemos, este motor hace lo mismo que el nuestro, pero de manera y con llamadas un poco diferentes. ¿Cómo hacemos para integrar este MotorEléctrico al resto de nuestro sistema? Así es, con un adaptador o adapter!
+ }
+ ```
 
-## El adapter "envuelve" al objeto extraño (por eso le llaman wrapper también, ya que wrapper viene siendo envoltorio).
+ Como vemos, este motor hace lo mismo que el nuestro, pero de manera y con llamadas un poco diferentes. ¿Cómo hacemos para integrar este MotorEléctrico al resto de nuestro sistema? Así es, con un adaptador o adapter!
 
-## Nuestro adaptador se escribiría así:
+ El adapter "envuelve" al objeto extraño (por eso le llaman wrapper también, ya que wrapper viene siendo envoltorio).
 
-## package com.guisho.software.patrones.adapter;
+ Nuestro adaptador se escribiría así:
 
-## public class MotorElectricoAdapter extends Motor{
+```java
+ package com.guisho.software.patrones.adapter;
 
-##     private MotorElectrico motorElectrico;
+ public class MotorElectricoAdapter extends Motor{
 
-##     public MotorElectricoAdapter(){
+     private MotorElectrico motorElectrico;
 
-##         super();
+     public MotorElectricoAdapter(){
 
-##         this.motorElectrico = new MotorElectrico();
+         super();
 
-##         System.out.println("Creando motor Electrico adapter");
+         this.motorElectrico = new MotorElectrico();
 
-##     }
+         System.out.println("Creando motor Electrico adapter");
 
-##     public void encender() {
+     }
 
-##         System.out.println("Encendiendo motorElectricoAdapter");
+     public void encender() {
 
-##         this.motorElectrico.conectar();
+         System.out.println("Encendiendo motorElectricoAdapter");
 
-##         this.motorElectrico.activar();
+         this.motorElectrico.conectar();
 
-##     }
+         this.motorElectrico.activar();
 
-##     public void acelerar() {
+     }
 
-##         System.out.println("Acelerando motor electrico...");
+     public void acelerar() {
 
-##         this.motorElectrico.moverMasRapido();
+         System.out.println("Acelerando motor electrico...");
 
-##     }
+         this.motorElectrico.moverMasRapido();
 
-##     public void apagar() {
+     }
 
-##         System.out.println("Apagando motor electrico");
+     public void apagar() {
 
-##         this.motorElectrico.detener();
+         System.out.println("Apagando motor electrico");
 
-##         this.motorElectrico.desconectar();
+         this.motorElectrico.detener();
 
-##     }
+         this.motorElectrico.desconectar();
 
-## }
+     }
 
-## Como ven el adapter se encarga no solo de corregir los nombres de los métodos, sino también cosas como conectar y desconectar el motor, cosas que a nuestra implementación no le importan. Pero lo más importante es que ahora podemos utilizar esta implemetnación de Motor en nuestro sistema utilizando la implementación de ellos. Por ejemplo podemos hacer cosas como esta:
+ }
+ ```
+ 
 
-##         Motor motor = new MotorEconomico();
+ Como ven el adapter se encarga no solo de corregir los nombres de los métodos, sino también cosas como conectar y desconectar el motor, cosas que a nuestra implementación no le importan. Pero lo más importante es que ahora podemos utilizar esta implemetnación de Motor en nuestro sistema utilizando la implementación de ellos. Por ejemplo podemos hacer cosas como esta:
+ 
+ ```java
 
-##         motor.encender();
+         Motor motor = new MotorEconomico();
 
-##         motor.acelerar();
+         motor.encender();
 
-##         motor.apagar();
+         motor.acelerar();
 
-##         motor = new MotorGaston();
+         motor.apagar();
 
-##         motor.encender();
+         motor = new MotorGaston();
 
-##         motor.acelerar();
+         motor.encender();
 
-##         motor.apagar();
+         motor.acelerar();
 
-##         motor = new MotorElectricoAdapter() ;
+         motor.apagar();
 
-##         motor.encender();
+         motor = new MotorElectricoAdapter() ;
 
-##         motor.acelerar();
+         motor.encender();
 
-##         motor.apagar();
+         motor.acelerar();
 
-## El patrón adapter aparece en todos lados, aunque muchas veces no se le llama adapter específicamente. Ahora que lo conocemos lo podemos usar en nuevos proyectos, o tal vez puede solucionarlos problemas que resolvimos a medias en algún software por ahí
+         motor.apagar();
+```         
 
-## 4.4 Bridge
+ El patrón adapter aparece en todos lados, aunque muchas veces no se le llama adapter específicamente. Ahora que lo conocemos lo podemos usar en nuevos proyectos, o tal vez puede solucionarlos problemas que resolvimos a medias en algún software por ahí.
+ 
+ 
 
-## 4.5 Facade
+ ##4.4 Bridge
 
-## 4.6 Proxy
+ ##4.5 Facade
 
-## 4.7  Module
+ ##4.6 Proxy
 
-5.  Patrones de comportamiento.  
+ ##4.7  Module
 
-## 5.1 Observer
+#5.  Patrones de comportamiento.  
 
-## 5.2 Chain of responsibility
+##5.1 Observer
 
-## 5.3 Command
+##5.2 Chain of responsibility
 
-## 5.4 Interpreter
+##5.3 Command
 
-## 5.5 Strategy
 
-## 5.6 Template
+##5.4 Interpreter
 
-## 5.7 Visitor
+##5.5 Strategy
+
+##5.6 Template
+
+##5.7 Visitor
 
