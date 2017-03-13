@@ -28,6 +28,8 @@ Aunque la mayoría de máquinas virtuales y plataformas actuales cuentan con com
 
 Dejando el rendimiento por un lado, una de las características fundamentales de un software que pueda escalar es que tan legible para humanos es. Ya se habló de lo eficiente que son los compiladores, por lo que enfocarse en hacer software legible es siempre una buena apuesta en cualquier proyecto de software. Y los patrones creacionales son muy útiles para esto. 
 
+ La razón de ser de estos patrones es para facilitar, ordenar, o ayudar en la creación de objetos. Dependiendo del lenguaje de programación que estemos utilizando, generalmente crearemos un objeto así: Objeto o = new Objeto(). Los patrones creacionales modifican un poco la manera de crear objetos, y una manera de crearlos, por ejemplo, sería: Objeto o = ObjectoFactory.getInstance("x").
+
 ## 3.1 Patron de constructor fluido  (*Builder, Fluid*)
 
 En términos generales un constructor (*builder*) existe para esconder los detalles de la creación de un objeto final, al que se llama producto. Hay varios métodos para lograr esto, y por ello hay varias "implementaciones" de este patrón que en nada coinciden, salvo en el nombre. El clásico, usado en el GoF es un poco más complejo del que se presentará ahora. El enfoque estará en lo que se conoce como constructores de interfaces fluidas. 
@@ -289,21 +291,13 @@ De nuevo, este no es el Builder de GoF, pero es otro concepto de *builder*, que 
 
 ## 3.3 Factory
 
-TAJUMULCO
+**TODO** definir mejor la teoría de este patrón. 
 
-Los patrones creacionales (creational patterns) son aquellos que tienen que ver con la creación (duh!) de objetos. La razón de ser de estos patrones es para facilitar, ordenar, o ayudar en la creación de objetos. Dependiendo del lenguage de programación que estemos utilizando, generalmente crearemos un objeto así: Objeto o = new Objeto(). Pues bueno, en los patrones creacionales las cosas cambian un poquito, y probablemente ahora crearemos un objeto así Objeto o = ObjectoFactory.getInstance("x");, o algo parecido.
-
- 
-
-Hoy hablaremos del más famoso de los patrones de creación: en Factory Pattern (Patrón de fábrica). Utilizaremos los nombres ingleses porque creo que son más claros que las traducciones que se podrían hacer. Además, en software de todos lados, es más estandar utilizar el inglés en ciertas nomenclaturas para facilitar que otros lean nuestro código. Buhh, alguien alega por ahí, pero reconzcámoslo: programamos en inglés. 
+Para ilustrar este patrón, se hará uso de un ejemplo. Supóngase que la tarea que se está por hacer es crear un traductor que devuelva los números del cero al diez en tres idiomas: inglés, español, y alemán. Existen muchísimas maneras de hacer esto. Al final, se desea un método que reciba un entero entre 0 y 10 y que devuelva una cadena con el nombre de dicho número en el idioma que se esté trabajando. 
 
  
 
-Como todo se entiende mejor con un ejemplo -al menos eso creo yo-, comenzaremos con uno. Supongamos se nos encarga crear un traductor que devuelva los números del cero al diez en tres idiomas: inglés, español, y alemán. Existen muchísimas maneras de hacer esto. Al final, se desea un método que reciba un entero entre 0 y 10 y que devuelva una cadena con el nombre de dicho número en el idioma que se esté trabajando. 
-
- 
-
-Una manera de entrarle al problema podría ser algo así:
+Una manera de resolver el problema puede ser algo así:
 
 ```java
 
@@ -371,11 +365,14 @@ System.out.println(mc.traducirNumero("espanol",1));
 }//de la clase
 ```
 
- El resultado del código anterior, como ya sabrán, es uno.
+El resultado del código anterior es:
+```
+uno
+```
 
-Esta solución parece funcionar, y de hecho lo hace. Pero imaginemos que ahora nos dicen que desean la traducción de todos los números? Sin duda el código comenzará a crecer. Y claro, ahora tendremos que agregar código de lógica para cada idioma para escribir números como 752, 1233, etc. 
+Esta solución parece funcionar, y de hecho lo hace. Pero imagínese que ahora nos dicen sea desea la traducción de todos los números. El código comenzará a crecer desmedidamente, ya que ahora se hace necesario agregar código de lógica para cada idioma para escribir números como 752, 1233, etc. 
 
-Como nos gusta hacer gala de nuestro enfoque a objetos, los primero que se nos ocurre es una herencia. Definiremos una clase abstracta Traductor, y para cada idioma haremos una subclase de Traductor.
+Siguiendo la escuela de programación orientada a objetos, una solución natural puede ser el uso de herencia. Se define una clase abstracta Traductor, y para cada idioma se escribe	 una subclase de Traductor.
 
  ```Java
 
@@ -386,7 +383,7 @@ public abstract class Traductor{
 }
 ```
 
-Y ahora comienza la magia a aparecer. Vamos a crear una clase especializada para diccionario, que se encargará de traducir los números. Tendremos una clase especializada para traducir los números al español, que iría algo así:
+Ahora comienza la magia a aparecer: se va a crear una clase especializada para diccionario, que se encargará de traducir los números. Se tendrá una clase especializada para traducir los números al español, que iría algo así:
 
 ```java
 
@@ -417,7 +414,7 @@ public class TraductorEspanol extends Traductor {
 }
 ```
 
-La clase para el inglés iría
+La clase para el inglés sería:
 
 ```java
 public class TraductorIngles extends Traductor {
@@ -447,7 +444,7 @@ public class TraductorIngles extends Traductor {
 }
 ```
 
-Y la del alemán no la ponemos, porque ya captaron la idea. Ahora, en el momento de querer utilizar un diccionario, se llamaría algo así
+La del alemán sería similar. Ahora, en el momento de querer utilizar un diccionario, se llamaría de la siguiente manera:
 
 ```
 
@@ -498,9 +495,9 @@ public class MainClient {
 }//de la clase
 ```
 
-Qué hemos ganado? Primero, nuestro código es mucho más legible. Segundo es bastante más escalable. Podemos agregar el traductor para el francés muy fácilmente. Tercero hemos escondido la manera en la que traducimos a Tradúceme. Por ejemplo, puede ser que las traducciones a chino las vayamos a traer a un web Service. En ese caso TraductorChino se encargaría de hacer todo el ajetreo de conectarse a internet y buscar el web services, pero los demás ni se enteran.
+Con este nuevo enfoque, ¿qué se ha ganado? Primero, el código es mucho más legible. Segundo es bastante más escalable: se puede agregar el traductor para el francés muy fácilmente. Tercero, se ha escondido la manera en la que se traduce a Tradúceme. Por ejemplo, puede ser que las traducciones a chino se vayan a traer a un *Web Service*. En ese caso TraductorChino se encargaría de hacer todo el ajetreo de conectarse a Internet y buscar el *web services*, pero los demás ni se enteran.
 
-Pero el Factory Pattern no ha aperecido, Es tiempo de irlo a llamar. Bueno, Traduceme está haciendo algo que no le compete: está eligiendo la instancia de Traductor que quiere usar. Imaginen que se usa el traductor en 100 lugares, entonces en cien lugares se tiene que buscar qué clase de Traductor vamos a instanciar. El patrón de fábrica -factory pattern- nos esconde esa lógica. Vamos a agregar ahora nuestra fábrica de traductores.
+El *Factory Pattern* no ha aparecido, Es tiempo de irlo a llamar. Traduceme está haciendo algo que no le compete: está eligiendo la instancia de Traductor que quiere usar. Piénses que se usa el traductor en 100 lugares, entonces en cien lugares se tiene que buscar qué clase de Traductor vamos a instanciar. El patrón de fábrica (*factory pattern*) esconde esa lógica. Se va a agregar ahora la fábrica de traductores.
 
 ```java
 
@@ -560,13 +557,13 @@ public class MainClient {
 
 MainClient se ha visto dramáticamente reducido, y su código es muy fácil de leer. Quien quiera usar un traductor simplemente hará llamar a Traduceme. Traduceme sabe el idioma que eligieron, pero no sabe que subclase de Traductor instanciar, pero sabiendo el idioma TraductorFactory sabe exáctamente qué instancia de Traductor crear. Si la aplicación desea cambiar de idioma simplemente le envía otro parámetro a Traduceme y listo. También agregar idiomas es más manejable que antes. 
 
-El Factory Pattern esconde al usuario final dle código la desición de qué sublclase instanciar, y promueve el encapsulamiento de las partes más variables del sistema. En términos generales, una fábrica abstracta consiste de las siguientes partes:
+El *Factory Pattern* esconde al usuario final del código la desición de qué sublclase instanciar, y promueve el encapsulamiento de las partes más variables del sistema. En términos generales, una fábrica abstracta consiste de las siguientes partes:
 
 Un cliente, que es el que llama a la fábrica (en nuestro caso MainClient).
 
-Una fábrica, que decidé la clase a instanciar (TraductorFactory).
+Una fábrica, que decide la clase a instanciar (TraductorFactory).
 
-Un prodicto, lo que la fábrica devuelve (para nosotros las instancias de Traductor).
+Un producto, lo que la fábrica devuelve (para nosotros las instancias de Traductor).
 
  
 
