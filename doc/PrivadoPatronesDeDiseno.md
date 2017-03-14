@@ -569,11 +569,12 @@ Un producto, lo que la fábrica devuelve (para nosotros las instancias de Traduc
 
 ## 3.4 Abstract Factory
 
-Hace una semana hablamos del Factory Pattern, que realmente se llama Factory Method Pattern, porque como vimos se trata de reducir la desición de la creación de una instancia a un método, pero que por gusto mío lo pusimos en una clase Factory con un método abstracto. Ahora vamos a hablar del Abstract Factory Pattern, que va un paso más alla: el Abstract Factory Method agrupa varios Factory Methods.
 
-Básicamente lo que hace el este patrón es unir varios Factory Methods, delegando la responsabilidad total sobre qué instancias crear a partir de datos comunes. La semana pasada hicimos un pequeño traductor, que al recibir un número desplegaba su valor en español, inglés o alemán. Para mostrar el concepto del Abstract Factory vamos a extender el ejemplo.
+En la sección anterior se abordó el *Factory Pattern* (o *Factory Method Pattern*) . Ahora se tratará del *Abstract Factory Pattern*, que va un paso más allá: el *Abstract Factory* agrupa varios *Factory Methods*.
 
-Primero vamos hacer un sencillo reloj que nos muestra la hora actual. Como sabemos, la hora puede ser desplegada en formato de 24Hrs o puede ser desplegada en formato AM/PM. Recordando que es a manera de ejemplo, vamos a utilizar la clase Date de una manera que no se debe, y probablemente el reloj lo haríamos de una manera más sencilla, pero para nuestro ejemplo queda perfecta su uso. Como en el caso del diccionario, haremos una clase abstracta de Reloj y dos implementaciones para cada una de los formatos, y una clase que contenga el método del Factory Method. La cosa quedaría algo así:
+Básicamente lo que hace este patrón es unir varios Factory Methods, delegando la responsabilidad total sobre qué instancias crear a partir de datos comunes. En la sección anterior se utilizó el ejemplo de un pequeño traductor, que al recibir un número desplegaba su valor en español, inglés o alemán. Para mostrar el concepto del Abstract Factory se extenderá el mismo ejemplo.
+
+Ahora se hará un sencillo reloj que muestra la hora actual. La hora puede ser desplegada en formato de 24 horas o puede ser desplegada en formato AM/PM. Recordando que es a manera de ejemplo, se utilizará la clase Date de una manera no aconsejable. Esto para omitir código de plomería extra, y facilidad de lectura. Como en el caso del diccionario, se hará una clase abstracta de Reloj y dos implementaciones para cada una de los formatos, y una clase que contenga el método del Factory Method. El código sería así:
 
 ```java
 
@@ -586,7 +587,7 @@ public abstract class Reloj {
 }
 
 ```
-La clase que se da la hora en formato AM/PM:
+La clase que da la hora en formato AM/PM:
 
 ```java
 public class RelojAmPm extends Reloj{
@@ -598,25 +599,16 @@ public class RelojAmPm extends Reloj{
     public String dameLaHora() {
 
         Date d = new Date();
-
         int hora = d.getHours();
-
         int minutos = d.getMinutes();
-
         int segundos = d.getSeconds();
-
         String tr;
-
+        
         if (hora<=12){
-
             tr="Son las "+hora+":"+minutos+":"+segundos+" AM";
-
         } else {
-
             tr="Son las "+(hora-12)+":"+minutos+":"+segundos+" PM";
-
         }
-
         return tr;
 
     }
@@ -624,26 +616,20 @@ public class RelojAmPm extends Reloj{
 }
 ```
 
-La que nos da la hora en formato de 24 horas:
+La que da la hora en formato de 24 horas:
 
 ```java
 
 public class Reloj24Hrs extends Reloj {
 
     public String dameLaHora() {
-
-        Date d = new Date();
-
+		 Date d = new Date();
         int hora = d.getHours();
-
         int minutos = d.getMinutes();
-
         int segundos = d.getSeconds();
-
         String tr;
-
-        tr = "Son las " + hora + ":" + minutos + ":" + segundos + " ";
-
+        
+        tr = "Son la(s) " + hora + ":" + minutos + ":" + segundos + " ";
         return tr;
 
     }
@@ -651,14 +637,13 @@ public class Reloj24Hrs extends Reloj {
 }
 ```
 
-Nuestra clase que contiene la el método que elije las instancias. A diferencia del post anterior, ahora el parámetro que recibe el método es un entero, que acepta los enteros especificados como constantes estáticas en la clase. Esto se usa mucho para no estar adivinando los paráemetros que acepta el método:
+Ahora la clase que contiene la el método que elige las instancias. A diferencia de la sección anterior, ahora el parámetro que recibe el método es un entero, que acepta los enteros especificados como constantes estáticas en la clase. Esto para no estar adivinando los parámetros que acepta el método:
 
 ```java
 
 public class RelojFactory {
 
     public static final int RELOJ_AM_PM=0;
-
     public static final int RELOJ_24_HRS=1;
 
     public RelojFactory(){
@@ -666,23 +651,15 @@ public class RelojFactory {
     }
 
     public static Reloj createReloj(int tipoDeReloj){
-
         if (tipoDeReloj==RelojFactory.RELOJ_24_HRS){
-
             return new Reloj24Hrs();
-
         }
 
         if (tipoDeReloj==RelojFactory.RELOJ_AM_PM){
-
             return new RelojAmPm();
-
         }
-
         return null;
-
     }
-
 }
 ```
 
@@ -693,72 +670,54 @@ Y finalmente la clase cliente, que será la usuario final:
 public class MainClient {
 
     public static void main(String[] args) {
-
         Reloj r = RelojFactory.createReloj(RelojFactory.RELOJ_24_HRS);
-
         System.out.println(r.dameLaHora());
-
     }
-
 }
 ```
 
-Hasta aquí tenemos dos fábricas: una de palabras, y la que acabamos de hacer que nos da la hora. En un proyecto cualquiera se nos pide hacer un sistema que despliegue la hora y los números de la manera en la que se expresan en cada país (una implementación súper elemental de Locale de Java). Vamos con dos ejemplos prácticos. En Estados Unidos se despliegan los números en inglés, y la hora en formato AM/PM; mientras que en Guatemala se dicen los números en español y la hora en formato de 24 Horas.
+Hasta aquí se teinen dos fábricas: una de palabras, y la que recién creada que da la hora. Supóngase se solicita hacer un programa que despliegue la hora y los números de la manera en la que se expresan en cada país (una implementación súper elemental de *Locale* de Java). En Estados Unidos se despliegan los números en inglés, y la hora en formato AM/PM; mientras que en Guatemala se dicen los números en español y la hora en formato de 24 Horas.
 
-Ahora vamos a crear una Abstract Factory, que le pondremos Locale.
+Ahora se crea una *Abstract Factory*, que será llamada *Locale*.
 
 ```java
 public abstract class AbstractLocaleFactory {
 
     public static final String US="ESTADOS_UNIDOS";
-
-    public static final String GT="GUATEMALA";
-
+    public static final String GT="GUATEMALA"
     String pais;
-
     public abstract Traductor createTraductor();
-
     public abstract Reloj createReloj();
-
+    
     public String getPais(){
-
         return this.pais;
-
     }
 
     public void setPais(String pais){
-
         this.pais = pais;
-
     }
 
 }
 ```
 
-Como ven esta fabrica tiene un par de métodos que devuelven un Reloj y un Traductor. Noten que Reloj y Traductor son a su vez clases abstractas.
+Esta fabrica tiene un par de métodos que devuelven un Reloj y un Traductor. Nótese que Reloj y Traductor son a su vez clases abstractas.
 
-Ahora implementamos nuestra clase LocaleGuatemalaFactory, que va así:
+Ahora se procede a implementar la clase LocaleGuatemalaFactory, que se ve así:
 
 ```java
 
 public class LocaleGuatemalaFactory extends AbstractLocaleFactory{
 
     public LocaleGuatemalaFactory(){
-
         this.pais=this.GT;
-
     }
 
     public Traductor createTraductor() {
-
         return TraductorFactory.createTraductor("espanol");
-
     }
 
     public Reloj createReloj() {
-
         return RelojFactory.createReloj(RelojFactory.RELOJ_24_HRS);
-
     }
 
 }
@@ -770,47 +729,33 @@ Y la respectiva para Estados Unidos:
 public class LocaleEstadosUnidosFactory extends AbstractLocaleFactory{
 
     public LocaleEstadosUnidosFactory(){
-
         this.pais=AbstractLocaleFactory.US;
-
     }
 
     public Traductor createTraductor() {
-
         return TraductorFactory.createTraductor("ingles");
-
     }
 
     public Reloj createReloj() {
-
         return RelojFactory.createReloj(RelojFactory.RELOJ_AM_PM);
-
     }
 
 }
 ```
 
-Ahora en el cliente, si queremos las cosas como se verían en Guatemala, simplemente hacemos esto.
+Ahora en el cliente, si se desea las cosas como se verían en Guatemala, simplemente se hace lo siguiente:
 
 ```java
 public class MainClient {
 
     public static void main(String[] args) {
-
         Reloj reloj = null;
-
         Traductor traductor = null;
-
         AbstractLocaleFactory localeFactory = new LocaleGuatemalaFactory();
-
         reloj = localeFactory.createReloj();
-
         traductor = localeFactory.createTraductor();
-
         System.out.println("--------");
-
         System.out.println("1="+traductor.traducirNumero(1));
-
         System.out.println(reloj.dameLaHora());
 
     }
@@ -822,36 +767,36 @@ El resultado de correr el codigo anterior es:
 ```
 
 1=uno
-
 Son las 21:50:17
 
 ```
-Ahora si cambiamos la linea
+
+Si se cambia la siguiente línea:
 ```java
 
         AbstractLocaleFactory localeFactory = new LocaleGuatemalaFactory();
 ```        
 
-Por esta
+Por esta:
 
 ```java
         AbstractLocaleFactory localeFactory = new LocaleEstadosUnidosFactory();
 ```
 
-Tendremos como resultado:
+Se tiene como resultado:
+
 ```
-
 1=one
-
 9:52:56 PM
 ```
 
-Aquí es un ejemplo sencillo. Pero imaginen quedemos hacer un Locale para cada país, y en el locale tener más cosas como: la nomenclatura de moneda, el sistema de numeración, el manejo de fechas, kilómetros o millas, etc. Con el Abstract Factory Pattern es muy sencillo agregar cada nuevo pais, o cada nueva característica del Locale. Pero sobre todo el código es MUY legible y FACILMENTE extensible. Alguien que nunca ha visto estas piezas de código puede entender como hacer un nuevo país.
+Este es un ejemplo sencillo. Pero imagínese que se desea implementar hacer un *Locale* para cada país, y en el tener más cosas como: la nomenclatura de moneda, el sistema de numeración, el manejo de fechas, kilómetros o millas, etc. Con el *Abstract Factory Pattern* es muy sencillo agregar cada nuevo país, o cada nueva característica del Locale. Pero sobre todo el código es MUY legible y FACILMENTE extensible. Alguien que nunca ha visto estas piezas de código puede entender como hacer un nuevo país.
 
-Entonces, el Abstract Factory Pattern puede ayudarnos mucho en casos donde hemos de manejar familias de objetos. Al inicio no siempre es obvia su implementación, pero siempre está el recurso de del refactoring, en el cual salen nuevas maneras sencillas de hacer las cosas. Este, como muchos patrones, requieren escribir un poco más de código al principio, pero nos reducen el esfuerzo a largo plazo porque hay menos código repetido.
+Entonces, el *Abstract Factory Pattern* ayuda mucho en casos donde se han de manejar familias de objetos. Al inicio no siempre es obvia su implementación, pero siempre está el recurso de del refactoring, en el cual salen nuevas maneras sencillas de hacer las cosas. Este, como muchos patrones, requieren escribir un poco más de código al principio, pero reduce el esfuerzo a largo plazo porque hay menos código repetido.
 
 ## 3.5 Prototype
 
+TAJUMULCO
 Ya casi terminando con los patrones creacionales, vamos a hablar hoy sobre el prototype pattern, o patrón prototipo. Como los demás patrones creacionales, este patrón sustituirá para el cliente la palabra clave new por otra forma de crear objetos. En este caso específico la creación se hará sobre objetos que son complicados de crear, que para evitar usar new  serán clonados a partir de una instancia ya existente. Afortunadamente crear objetos no crea ningún tipo de reparo moral, porque este patrón de eso se trata: de clonar, de pasar el ADN de un objeto a otro.  Es decir cada instancia del objeto se obtendrá a partir de un prototipo (sí, de ahí el nombre del patrón!). 
 
 Este patrón es facilito, ya lo veremos. En el caso específico de Java ya se tiene mucho camino ganado, porque Java provee la interaz clonable con el propósito de crear clones en mente. Pero vamos a hacer también una implementación sin usar esta interfaz para comprender completamente la idea detrás del prototipo. La primera manera de implementar este patrón en Java es implementando la interfaz Cloneable. Mas abajo veremos otra forma de implementarlo, que es haciéndolo a mano, con una ventaja extra: en vez de crear referencias a los objetos contenidos, podemos crear objetos nuevos, que en muchos cosas nos puede ser de utilidad. Por ahora veamos un un ejemplo sencillo usando cloneable:
