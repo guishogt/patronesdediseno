@@ -38,42 +38,25 @@ Para ilustrar el uso del patrón, se utilizará un ejemplo. Supóngase que se va
 
 ```java
 package com.guisho.software.patrones.builder;
-
 import java.math.BigDecimal;
-
 public class PaqueteDeHosting {
-
+ 
     /*Los siguientes campos son obligatorios siempre*/
-
     private String nombre;
-
     private BigDecimal precioAnual;
-
     private int capacidadDeAlmacenamiento; //en MB
-
     private int transferenciaMensual; //en MB
-
     private int cantidadDireccionesCorreo;//
-
     /*Las siguientes son opcionales, hay planes que no los tienen*/
-
     private int cantidadSitiosPermitidos;
-
     private int cantidadBaseDeDatos;
-
     private String codigoOferta;
-
     private boolean accesoSsh;
-
     private boolean panelDeControl;
-
     private boolean estadisticasDeSitio;
-
     private boolean ipPublica;
-
     public PaqueteDeHosting(){
-
-    }
+}
 
     /* mas constructores */
 
@@ -88,13 +71,9 @@ Bien, ahora cada plan tiene una configuración previamente establecida, que el v
     public PaqueteDeHosting(String nombre, BigDecimal precioAnual, int almacenamiento, int transferencia, int cantidadCorreos) {
 
         this.nombre = nombre;
-
         this.precioAnual = precioAnual;
-
         this.capacidadDeAlmacenamiento = almacenamiento;
-
         this.transferenciaMensual = transferencia;
-
         this.cantidadDireccionesCorreo = cantidadCorreos;
 
     }
@@ -102,15 +81,10 @@ Bien, ahora cada plan tiene una configuración previamente establecida, que el v
     public PaqueteDeHosting(String nombre, BigDecimal precioAnual, int almacenamiento, int transferencia, int cantidadCorreos, int basesDatos) {
 
         this.nombre = nombre;
-
         this.precioAnual = precioAnual;
-
         this.capacidadDeAlmacenamiento = almacenamiento;
-
         this.transferenciaMensual = transferencia;
-
         this.cantidadDireccionesCorreo = cantidadCorreos;
-
         this.cantidadBaseDeDatos = basesDatos;
 
     }
@@ -118,15 +92,10 @@ Bien, ahora cada plan tiene una configuración previamente establecida, que el v
     public PaqueteDeHosting(String nombre, BigDecimal precioAnual, int almacenamiento, int transferencia, int cantidadCorreos, String ipPublica) {
 
         this.nombre = nombre;
-
         this.precioAnual = precioAnual;
-
         this.capacidadDeAlmacenamiento = almacenamiento;
-
         this.transferenciaMensual = transferencia;
-
         this.cantidadDireccionesCorreo = cantidadCorreos;
-
         this.ipPublica = ipPublica;
 
     }
@@ -134,17 +103,11 @@ Bien, ahora cada plan tiene una configuración previamente establecida, que el v
     public PaqueteDeHosting(String nombre, BigDecimal precioAnual, int almacenamiento, int transferencia, int cantidadCorreos, String ipPublica,int basesDatos){
 
         this.nombre=nombre;
-
         this.precioAnual=precioAnual;
-
         this.capacidadDeAlmacenamiento=almacenamiento;
-
         this.transferenciaMensual=transferencia;
-
         this.cantidadDireccionesCorreo=cantidadCorreos;
-
         this.ipPublica=ipPublica;
-
         this.cantidadBaseDeDatos=basesDatos;
 
     }
@@ -164,13 +127,9 @@ En PaqueteDeHosting se hace un constructor con los campos que siempre van para e
     public PaqueteDeHosting(String nombre, BigDecimal precioAnual, int almacenamiento, int transferencia, int cantidadCorreos) {
 
         this.nombre = nombre;
-
         this.precioAnual = precioAnual;
-
         this.capacidadDeAlmacenamiento = almacenamiento;
-
         this.transferenciaMensual = transferencia;
-
         this.cantidadDireccionesCorreo = cantidadCorreos;
 
     }
@@ -184,11 +143,8 @@ package com.guisho.software.patrones.builder;
 import java.math.BigDecimal;
 
 /**
-
  *
-
  * @author guisho.com, luishernan@gmail.com
-
  */
 
 public class PaqueteDeHostingBuilder {
@@ -198,13 +154,9 @@ public class PaqueteDeHostingBuilder {
     public PaqueteDeHostingBuilder(String nombre, BigDecimal precio, int cantidadAlmacenamiento, int transferenciaMesual, int cantidadCorreo){
 
         this.paquete.setNombre(nombre);
-
         this.paquete.setPrecioAnual(precio);
-
         this.paquete.setCapacidadDeAlmacenamiento(cantidadAlmacenamiento);
-
         this.paquete.setTransferenciaMensual(transferenciaMesual);
-
         this.paquete.setCantidadDireccionesCorreo(cantidadCorreo);
 
     }
@@ -212,7 +164,6 @@ public class PaqueteDeHostingBuilder {
     public PaqueteDeHostingBuilder catidadSitiosPermitidos (int cantidad){
 
         this.paquete.setCantidadSitiosPermitidos(cantidad);
-
         return this;
 
     }
@@ -220,15 +171,13 @@ public class PaqueteDeHostingBuilder {
     public PaqueteDeHostingBuilder cantidadBaseDeDatos (int cantidad){
 
         this.paquete.setCantidadBaseDeDatos(cantidad);
-
-        return this;
+       return this;
 
     }
 
     public PaqueteDeHostingBuilder accessoSsh(boolean acceso){
 
         this.paquete.setAccesoSsh(acceso);
-
         return this;
 
     }
@@ -236,7 +185,6 @@ public class PaqueteDeHostingBuilder {
     public PaqueteDeHostingBuilder panelControl (boolean panel){
 
         this.paquete.setPanelDeControl(panel);
-
         return this;
 
     }
@@ -244,7 +192,6 @@ public class PaqueteDeHostingBuilder {
     public PaqueteDeHostingBuilder codigoOferta(String codigo){
 
         this.paquete.setCodigoOferta(codigo);
-
         return this;
 
     }
@@ -252,7 +199,6 @@ public class PaqueteDeHostingBuilder {
     public PaqueteDeHostingBuilder ipPublica (String ip){
 
         this.paquete.setIpPublica(ip);
-
         return this;
 
     }
@@ -308,29 +254,18 @@ public MainClient(){
      }
 
 	public traducirNumero(String idioma, int numero){
-
 		if (idioma.equals("español")){
-
 		  switch (numero){
-
-		     case 0: return "uno";
-
+	     case 0: return "uno";
 		     case 1: return "dos";
-
 		    ....
-
 		   }
-
 		}
 
 		if (idioma.equals("english")){
-
 		    switch (numero){
-
 		     case 0: return "one";
-
 		     case 1: return "two";
-
 		    ....
 
 		    }
@@ -340,15 +275,10 @@ public MainClient(){
 		if (idioma.equals("deutsch")){
 
 		    switch (numero){
-
 		     case 0: return "eins";
-
 		     case 1: return "zwei";
-
 		    ....
-
 		    }
-
 		}
 
 	}//traducirNumero
@@ -356,9 +286,8 @@ public MainClient(){
 
 public static void main(String args[]){
 
-MainClient mc = new MainClient();
-
-System.out.println(mc.traducirNumero("espanol",1));
+	MainClient mc = new MainClient();
+	System.out.println(mc.traducirNumero("espanol",1));
 
 }
 
@@ -377,7 +306,6 @@ Siguiendo la escuela de programación orientada a objetos, una solución natural
 ```java
 
 public abstract class Traductor{
-
    public abstract String traducirNumero(int numero);
 
 }
@@ -389,23 +317,16 @@ Ahora comienza la magia a aparecer: se va a crear una clase especializada para d
 ```java
 
 public class TraductorEspanol extends Traductor {
-
     public TraductorEspanol(){
-
        super();
-
        ...
-
     }
 
     public String traducirNumero(int numero){
 
        switch(numero){
-
        	   case 1: return "uno";
-
        	   case 2: return "dos";
-
        	   ...
 
        }
@@ -421,9 +342,7 @@ La clase para el inglés sería:
 public class TraductorIngles extends Traductor {
 
     public TraductorIngles(){
-
        super();
-
        ...
 
     }
@@ -431,17 +350,12 @@ public class TraductorIngles extends Traductor {
     public String traducirNumero(int numero){
 
        switch(numero){
-
        	   case 1: return "one";
-
        	   case 2: return "two";
-
        	   ...
 
        }
-
     }	
-
 }
 ```
 
@@ -450,46 +364,36 @@ La del alemán sería similar. Ahora, en el momento de querer utilizar un diccio
 ```java
 
 Traductor t = new TraductorEspanol();
-
 t.traducirNumero(1);
+
+```
 
 Entonces, la clase MainClient cambiaría un poco y quedaría así:
 
+```java
 public class MainClient {
-
 	public String  traducirNumero(int numero){
-
 		Traductor traductor = null;
-
 		if (idioma.equals("español")){
-
 			traductor = new TraductorEspanol();
-
 		}
 
 		if (idioma.equals("ingles")){
-
 			traductor = new TraductorIngles();
-
 		} 
 
 		if (idioma.equals("aleman")){
-
 			traductor = new TraductorAleman();
-
 		}
 
 		String toReturn traductor.traducirNumero(numero);
-
-                return toReturn;
+       return toReturn;
 
 	}//traducirNumero
 
      public static void main(String args[]){
-
-          MainClient mc = new MainClient();
-
-          System.out.println(mc.traducirNumero("espanol",1));
+         MainClient mc = new MainClient();
+         System.out.println(mc.traducirNumero("espanol",1));
 
      }
 
@@ -505,7 +409,6 @@ El *Factory Pattern* no ha aparecido, Es tiempo de irlo a llamar. Traduceme est�
 public class TraductorFactory {
 
      public TraductorFactory(){
-
      }
 
 	public static Traductor createTraductor(int numero){
@@ -513,23 +416,14 @@ public class TraductorFactory {
 		Traductor traductor = null;
 
 		if (idioma=="español"){
-
 			traductor = new TraductorEspanol();
-
 		}
-
 		if (idioma=="english"){
-
 			traductor = new TraductorIngles();
-
 		} 
-
 		if (idioma=="deutsch"){
-
 			traductor = new TraductorAleman();
-
 		}
-
 		return traductor;
 
 	}
@@ -544,25 +438,21 @@ public class TraductorFactory {
 public class MainClient {
 
      String idioma;
-
      public static void main(Strin []args){
-
-		Traductor traductor = TraductorFactory.createTraductor("espanol");
-
-		System.out.println( traductor.traducirNumero(1) );
-
+	  Traductor traductor = TraductorFactory.createTraductor("espanol");
+	  System.out.println( traductor.traducirNumero(1) );
 	}//main
 
 }//de la clase
 ```
 
-MainClient se ha visto dramáticamente reducido, y su código es muy fácil de leer. Quien quiera usar un traductor simplemente hará llamar a Traduceme. Traduceme sabe el idioma que eligieron, pero no sabe que subclase de Traductor instanciar, pero sabiendo el idioma TraductorFactory sabe exáctamente qué instancia de Traductor crear. Si la aplicación desea cambiar de idioma simplemente le envía otro parámetro a Traduceme y listo. También agregar idiomas es más manejable que antes. 
+MainClient se ha visto dramáticamente reducido, y su código es muy fácil de leer. Quien quiera usar un traductor simplemente hará llamar a ```Traduceme```. ```Traduceme``` sabe el idioma que eligieron, pero no sabe que subclase de Traductor instanciar, pero sabiendo el idioma ```TraductorFactory``` sabe exactamente qué instancia de Traductor crear. Si la aplicación desea cambiar de idioma simplemente le envía otro parámetro a ```Traduceme``` y listo. También agregar idiomas es más manejable que antes. 
 
 El *Factory Pattern* esconde al usuario final del código la desición de qué sublclase instanciar, y promueve el encapsulamiento de las partes más variables del sistema. En términos generales, una fábrica abstracta consiste de las siguientes partes:
 
 Un cliente, que es el que llama a la fábrica (en nuestro caso MainClient).
 
-Una fábrica, que decide la clase a instanciar (TraductorFactory).
+Una fábrica, que decide la clase a instanciar (```TraductorFactory```).
 
 Un producto, lo que la fábrica devuelve (para nosotros las instancias de Traductor).
 
@@ -582,9 +472,7 @@ Ahora se hará un sencillo reloj que muestra la hora actual. La hora puede ser d
 La clase Reloj:
 
 public abstract class Reloj {
-
     abstract String dameLaHora();
-
 }
 
 ```
@@ -594,7 +482,6 @@ La clase que da la hora en formato AM/PM:
 public class RelojAmPm extends Reloj{
 
     public RelojAmPm(){
-
     }
 
     public String dameLaHora() {
@@ -603,15 +490,13 @@ public class RelojAmPm extends Reloj{
         int hora = d.getHours();
         int minutos = d.getMinutes();
         int segundos = d.getSeconds();
-        String tr;
-        
+        String tr;    
         if (hora<=12){
             tr="Son las "+hora+":"+minutos+":"+segundos+" AM";
         } else {
             tr="Son las "+(hora-12)+":"+minutos+":"+segundos+" PM";
         }
         return tr;
-
     }
 
 }
@@ -922,9 +807,8 @@ Esto permite que el cliente pueda hacer la siguiente llamada:
 La idea básica del patrón es sencilla: crear una copia de un objeto para ahorrarse los pasos de su creación, o para optimizar accesos o procesos que ya se hicieron en un objeto similar y crear una copia del objeto ya con esos datos ingresados.
 
 TAJUMULCO
-## 3.6 Object Pool
 
-## 3.7 Singleton
+## 3.6 Singleton
 
 Estamos abordando ahora un tercer patrón creacional, o de creación. El Singleton Pattern, a diferencia de los dos que ya hemos visto y los que veremos, no se encarga de la creación de objetos en sí, sino que se enfoca en la restricción en la creación de un objeto. Este patrón es ampliamente utilizado por muchos frameworks, y también es uno de los más fáciles de aprender y utilizar. 
 
@@ -1080,6 +964,9 @@ Para evitar esto tendríamos que añadir las siguietnes líneas a nuestra clase 
        }
        
 ```       
+
+## 3.6 Object Pool
+
 
 También alguien podría extender la clase y volver público el constructor. Para evitar esto sería buena idea declarar nuestra clase como final.
 
