@@ -810,13 +810,13 @@ TAJUMULCO
 
 ## 3.6 Singleton
 
-Estamos abordando ahora un tercer patrón creacional, o de creación. El Singleton Pattern, a diferencia de los dos que ya hemos visto y los que veremos, no se encarga de la creación de objetos en sí, sino que se enfoca en la restricción en la creación de un objeto. Este patrón es ampliamente utilizado por muchos frameworks, y también es uno de los más fáciles de aprender y utilizar. 
+El Singleton Pattern, a diferencia de los otros patrones de diseño creacionales, no se encarga de la creación de objetos en sí, sino que se enfoca en la restricción en la creación de un objeto. Este patrón es ampliamente utilizado por muchos *frameworks*, y también es uno de los más fáciles de aprender y utilizar. 
 
-Siempre que se crea un objeto nuevo (en Java con la palabra reservada new) se invoca al constructor del objeto para que cree una instancia. Por lo general los constructores son públicos. El singleton lo que hace es convertir al constructor en privado, de manera que nadie lo pueda instanciar. Entonces, si el constructor es privado, ¿cómo se instancia el objeto? Pues a través de un método público y estático de la clase. En este método se revisa si el el objeto ha sido instanciado antes. Si no ha sido instanciado, llama al constructor y guarda el objeto creado en una variable estática del objeto. Si el objeto ya fue instanciado anteriormente, lo que hace este método es devolver la referencia al estado creado anteriormente. 
+Siempre que se crea un objeto nuevo (en Java con la palabra reservada ```new```) se invoca al constructor del objeto para que cree una instancia. Por lo general los constructores son públicos. El *singleton* lo que hace es convertir al constructor en privado, de manera que nadie lo pueda instanciar. Entonces, si el constructor es privado, ¿cómo se instancia el objeto? Pues a través de un método público y estático de la clase. En este método se revisa si el el objeto ha sido instanciado previamente. Si no ha sido instanciado, llama al constructor y guarda el objeto creado en una variable estática del objeto. Si el objeto ya fue instanciado anteriormente, lo que hace este método es devolver la referencia al estado creado anteriormente. 
 
-En los patrones anteriores utilizamos un Traductor. Imaginemos que el traductor carga a memoria no sólo números, pero también diez mil palabras obtenidas a través de un archivo de texto o un web service. Cada vez que este objeto se cree utilizará mucho espacio en memoria. Además, si se usa un web services para cargarlo, cada carga consume muchos recursos de red y tarda mucho en terminarse de construir. 
+En los patrones anteriores se utilizó un ```Traductor```. Imagínese que el traductor carga a memoria no sólo números, pero también diez mil palabras obtenidas a través de un archivo de texto o un *web service*. Cada vez que este objeto se cree utilizará mucho espacio en memoria. Además, si se usa un *web service* para cargarlo, cada carga consume muchos recursos de red y tarda mucho en terminarse de construir. 
 
-Traductor estará disponible para toda la aplicación, y en cualquier lado que se despliegue un texto será invocado. No tendría mucho sentido construir un Traductor cada vez que lo querramos utilizar. Lo más sano sería utilizar un sólo Traductor para toda la aplicación. ¿Cómo lograrlo? A través de un Singleton. Omitiendo la lógica del objeto, el código que se debería usar quedaría algo así:
+```Traductor``` estará disponible para toda la aplicación, y en cualquier lado que se despliegue un texto será invocado. No tendría mucho sentido construir un ```Traductor``` cada vez que se lo quiera utilizar. Lo más sano sería utilizar un sólo ```Traductor``` para toda la aplicación. ¿Cómo lograrlo? A través de un Singleton. Omitiendo la lógica del objeto, el código que se debería usar quedaría algo así:
 
 ```java
 
@@ -861,19 +861,20 @@ public class Traductor{
 }
 ```
 
-En cualquier lugar de la aplicacion que se quiera utilizar hacer una traducción se hace esto:
+En cualquier lugar de la aplicación que se quiera utilizar hacer una traducción se debería hacer lo siguiente:
 
+```java
 Traductor.getTraductor().translate("unaPalabra");
+```
 
-¿Qué logramos con esto? Que alguien que utilice nuestro código no pueda hacer esto
-
+Con esto se logra que nadie, dentro del ambiente de la máquina virtual, pueda hacer lo siguiente. 
 ```java
 Traductor t = new Traductor();
 ```
 
-Es un gran beneficio porque podemos controlar mejor, cambiarla en el futuro, optimizarla, a Traductor. Evita malos usos de la clase y se nos asegura que a lo más hay una instancia del objeto en toda la aplicación.
+Es un gran beneficio porque se puede controlar mejor la manera en la que```Traductor``` puede ser usada. Evita malos usos de la clase y se asegura que a lo más hay una instancia del objeto en toda la aplicación.
 
-Las cosas no son tan fáciles como parecen. Hay muchas maneras de crear los Singletons. En este ejemplo utilizamos un booleano estático, pero no siempre es necesario, pudimos haber inicializado traductorInstance como null, y en vez de verificar la variable booleana, verificar si la instancia es null o no.
+Hay muchas maneras de crear los Singletons, que pueden complicarse. En este ejemplo se utiliza un booleano estático, pero no siempre es necesario, se pudo  haber inicializado ```traductorInstance``` como ```null```, y en vez de verificar la variable booleana, verificar si la instancia es null o no.
 
 ```java
 
@@ -914,7 +915,7 @@ public class Traductor{
 }
 ```
 
-O, para hacer las cosas más fáciles (que no siempre conviene, jeje) podríamos evitar la evaluación en getTraductor y crear el objeto cuando lo declaramos:
+O, para hacer las cosas más sencillas (que no siempre conviene) se podría haber decidido evitar la evaluación en ```getTraductor``` y crear el objeto cuando al momento de declararlo:
 
 ```java
 
@@ -923,27 +924,18 @@ public class Traductor{
       private static  Traductor traductorInstance=new Traductor();
 
       /**
-
        *Notar que el constructor es privado!
-
       */
-
       private Traductor(){
-
           //cargar un diccionario a memoria  a través de un WebService.
-
      }
 
     public static Traductor getTraductor(){
-
            return Traductor.traductorInstance;
-
    	}
 
     public String translate(String toTranslate){
-
        //mucho código bonito va aquí
-
     } 
 
 }
@@ -963,7 +955,9 @@ Para evitar esto tendríamos que añadir las siguietnes líneas a nuestra clase 
 
        }
        
-```       
+```      
+
+En conclusión, este patrón es ampliamente utilizado, y en casos de objetos pesados, o caros de construir, que puedan ser compartidos dentro del mismo ambiente, el considerar un *singleton* es una buena idea. Como nota final, es importante tener en cuenta que los *singletons* al ser objetos compartidos, pueden tener un reto especial al considerar la sincronización.  
 
 ## 3.6 Object Pool
 
