@@ -806,7 +806,7 @@ Esto permite que el cliente pueda hacer la siguiente llamada:
 
 La idea básica del patrón es sencilla: crear una copia de un objeto para ahorrarse los pasos de su creación, o para optimizar accesos o procesos que ya se hicieron en un objeto similar y crear una copia del objeto ya con esos datos ingresados.
 
-TAJUMULCO
+
 
 ## 3.6 Singleton
 
@@ -957,36 +957,34 @@ Para evitar esto tendríamos que añadir las siguietnes líneas a nuestra clase 
        
 ```      
 
-En conclusión, este patrón es ampliamente utilizado, y en casos de objetos pesados, o caros de construir, que puedan ser compartidos dentro del mismo ambiente, el considerar un *singleton* es una buena idea. Como nota final, es importante tener en cuenta que los *singletons* al ser objetos compartidos, pueden tener un reto especial al considerar la sincronización.  
+
+También alguien podría extender la clase y volver público el constructor. Para evitar esto sería buena idea declarar nuestra clase como final.
+
+Hay que tener especial cuidado cuando el Singleton se utiliza en un ambiente multi hilos, porque puede crear problemas si no se implementa de la manera adecuada. En *Java* es posible que tengamos que meter algún synchronized por ahí para evitar problemas.
+
+Concluyendo, la idea central del Singleton es esa: asegurar de que exista tan solo una instancia del objeto en toda la aplicación. Hay muchas maneras de implementar un Singleton (aquí solo vimos algunas). Es un patrón muy aplicado en Java, aunque, como todos los patrones, se puede implementar en cualquier lenguaje orientado a objetos. También se pueden hacer cosas interesantes uniendo el Singleton con otros patrones creacionales (recordemos que el singleton no busca crear, sino que limitar la creación).
+
 
 ## 3.6 Object Pool
 
 
-También alguien podría extender la clase y volver público el constructor. Para evitar esto sería buena idea declarar nuestra clase como final.
-
-Hay que tener especial cuidado cuando el Singleton se utiliza en un ambiete multi hilos, porque puede crear problemas si no se implementa de la manera adecuada. En Java es posible que tengamos que meter algún synchronized por ahí para evitar problemas.
-
-Concluyendo, la idea central del Singleton es esa: asegurar de que exista tan solo una instancia del objeto en toda la aplicación. Hay muchas maneras de implementar un Singleton (aquí solo vimos algunas). Es un patrón muy aplicado en Java, aunque, como todos los patrones, se puede implementar en cualquier lenguaje orientado a objetos. También se pueden hacer cosas interesantes uniendo el Singleton con otros patrones creacionales (recordemos que el singleton no busca crear, sino que limitar la creación).
-
 #4.  Patrones Estructurales. 
 
-imos ya los patrones creacionales más importantes. No son todos, en el futuro veremos más, pero son los más usados y los más importantes. Ahora comenzamos con una nueva fase: Los patrones estructurales. Los patrones estructurales (structural patterns) podrían llamarse patrones de relaciones, o algo parecido, porque su principal función es facilitar y mejorar las relaciones entre objetos.
+ Los patrones estructurales (*structural patterns*) podrían llamarse patrones de relaciones, o algo parecido, porque su principal función es facilitar y mejorar las relaciones entre objetos.
 
-En el mundo de objetos, la creación de instancias es muy importante, pero tan importante como la creación, es la manera en la que instancias de objetos se comunican entre sí. Un diseño estandarizado y bien pensado puede facilitar mucho las cosas durante el desarrollo de un sistema grande. En ocasiones nos ponemos a realizar nuestras soluciones a la medida, pero generalmente estas solucionen decaen en construcciones extrañas que serán difíciles de entender para futuros desarrolladores, e incluso para nosotros mismos una vez que dejemos de ver el código.
+En el mundo de objetos, la creación de instancias es muy importante, pero tan importante como la creación, es la manera en la que instancias de objetos se comunican entre sí. Un diseño estandarizado y bien pensado puede facilitar mucho las cosas durante el desarrollo de un sistema complejo. Es fácil que una solución compleja, especialmente si la complejidad crece en el tiempo, posea una construcción extraña. Aunque hasta cierta medida esto siempre pasará, el tener en mente patrones creacionales ayudará a reducir la complejidad, y la rareza de cada implementación. Una buena implementación de código aspira a ser lo más estándar posible, de manera que cualquier programador pueda entenderla en el futuro. 
 
-Una solución elegante es utilizar inteligentemente patrones estructurales. Pero cuidado, puede ser arma de dos filos. Podemos caer en la tentación de meter patrones en todos lados, incluso cuando no es necesario. Nuestro código puede comenzar a crecer y crecer sin hacer aún nada, bajo la premisa de que todo lo queremos hacer con patrones.
+Debe tenerse cuidado, sin embargo, en el hacer ingeniería de más. Los patrones de diseño han de usarse ahí donde resuelvan problemas, nunca para hacer las cosas más complicadas. Por eso su correcto uso es más un arte que una ciencia. Los patrones son una herramienta de diseño muy poderosa, pero hay que saberla utilizar. El tiempo y la experiencia suelen ser los mejores acompañantes para un diseñador de software, porque sólo el ellos le darán el colmillo para utilizar sus herramientas adecuadamente.
 
-Los patrones son una herramienta de diseño muy poderosa, pero hay que saberla utilizar. El tiempo y la experiencia suelen ser los mejores acompañantes para un diseñador de software, porque sólo el tiempo le dará el colmillo para utilizar sus herramientas adecuadamente.
+Con mucha frecuencia el diseño de un dominio específico para un sistema inicia con nociones sumamente intuitivas. Conforme el diseño se va destilando y mejorando, se agregan soluciones específicas de software (como patrones), que lo pueden ir complicando (con el propósito de hacerlo más manejable). Generalmente los patrones estructurales entran en la jugada en etapas medias del diseño, y muchísimas veces son el resultado de refactorización (*refactoring*).
 
-Con mucha frecuencia el diseño de un dominio inicia con nociones sumamente intuitivas. Conforme el diseño se va destilando y mejorando, se agregan soluciones específicas de software (como patrones), que lo pueden ir complicando (con el propósito de hacerlo más manejable). Generalmente los patrones estructurales entran en la jugada en etapas medias del diseño, y muchísimas veces son el resultado de refactorización (refactoring).
-
-Así que comenzamos con los patrones estructurales. Encendamos motores y preparemos la mente, porque estos patrones son buenos martillos y desatornilladores que podemos meter en nuestra caja de herramientas. Sin dudas algún día nos serán de mucha utilidad en medio de un proyecto, y la gente quedará sorprendida de como resuelves elegantemente los problemas ;).
 
 ## 4.1 Decorator
 
 ## 4.2 Composite
 
 ## 4.3  Adapter
+TAJUMULCO
 
  El patrón estructural que ahora vamos a analizar es muy eficaz así como sencillo. Se puede utilizar en muchos contextos y es de especialidad utilidad cuando se utilizan códigos o librerías ajenos al que estamos utilizando y sobre el que no tenemos control. Este patrón se le conoce como adaptador o adapter en inglés, aunque algunos lo llaman también wrapper, que viene siendo como envoltorio. Ambos nombres tienen bastante sentido y explican el por qué de este patrón.
 
