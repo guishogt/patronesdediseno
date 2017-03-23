@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 package com.guisho.software.patrones.console;
-
+/*
 import asg.cliche.Command;
 import asg.cliche.ShellFactory;
 import java.io.IOException;
@@ -24,4 +24,5 @@ public class MainConsole {
         ShellFactory.createConsoleShell("hello", "", new MainConsole())
             .commandLoop(); // and three.
     }
+*/
 }
