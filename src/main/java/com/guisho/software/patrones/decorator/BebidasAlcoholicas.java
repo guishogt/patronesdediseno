@@ -11,23 +11,22 @@ import java.util.List;
  *
  * @author lfernandez
  */
-public class TvSatelital extends BoletoDeAvionDecorator{
+public class BebidasAlcoholicas extends BoletoDeAvionDecorator {
 
-    public TvSatelital(BoletoDeAvion boleto) {
+    public BebidasAlcoholicas(BoletoDeAvion boleto) {
         super(boleto);
     }
     
-        @Override
+    
+    
+      @Override
     public List<String> getAmenidades() {
-         this.getBoleto().getAmenidades().add("TV Satelital");
+         this.getBoleto().getAmenidades().add("Bebidas Alcoholicas Ilimitadas");
          return this.getBoleto().getAmenidades();
     }
 
     @Override
     public Double getCosto() {
-        return this.getBoleto().getCosto()+75.0;
+        return this.getBoleto().getCosto()+25.0;
     }
-
-
-    
 }

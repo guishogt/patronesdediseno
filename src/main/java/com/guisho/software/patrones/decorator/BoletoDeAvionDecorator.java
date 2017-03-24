@@ -25,6 +25,10 @@ public abstract class BoletoDeAvionDecorator implements BoletoDeAvion {
     public abstract List<String> getAmenidades();
     public abstract Double getCosto();
     
+    public BoletoDeAvion getBoleto(){
+        return this.boleto;
+    }
+    
     
     
 }

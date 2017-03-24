@@ -12,9 +12,9 @@ package com.guisho.software.patrones.decorator;
 public class Main {
     
     public static void main(String[] args) {
-        BoletoDeAvion boleto = new TvSatelital(new BoletoPrimeraClase());
+        BoletoDeAvion boleto = new SillaGrande(new IngresoPreferencial(new BebidasAlcoholicas(new TvSatelital(new BoletoDeCabina()))));
         System.out.println("Hola");
-        System.out.println("Amenidades <"+boleto.getAmenidades()+">");
+        System.out.println("Amenidades <"+boleto.getAmenidades()+"> "+boleto.getAmenidades().size()+">");
         System.out.println("Costo <"+boleto.getCosto()+">");
         
         

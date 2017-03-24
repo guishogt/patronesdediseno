@@ -3,13 +3,14 @@
  * and open the template in the editor.
  */
 package com.guisho.software.patrones.console;
+
 /*
 import asg.cliche.Command;
 import asg.cliche.ShellFactory;
 import java.io.IOException;
-
+*/
 public class MainConsole {
-
+/*
     @Command // One,
     public String hello() {
         return "Hello, World!";

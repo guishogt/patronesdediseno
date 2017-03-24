@@ -12,13 +12,17 @@ import java.util.List;
  *
  * @author lfernandez
  */
-public class BoletoPrimeraClase implements BoletoDeAvion{
+public class BoletoDeCabina implements BoletoDeAvion{
+
     List<String> amenidades = new ArrayList<String>();
+    public BoletoDeCabina() {
+        this.amenidades.add("Boleto Cabina");
+    }
         
 
+    
     @Override
     public List <String> getAmenidades() {
-        this.amenidades.add("Boleto primera clase");
         return this.amenidades;
     }
 
