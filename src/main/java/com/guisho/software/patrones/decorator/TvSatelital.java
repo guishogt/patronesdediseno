@@ -11,23 +11,20 @@ import java.util.List;
  *
  * @author lfernandez
  */
-public class TvSatelital extends BoletoDeAvionDecorator{
+public class TvSatelital extends BoletoDeAvionDecorator {
 
     public TvSatelital(BoletoDeAvion boleto) {
         super(boleto);
     }
-    
-        @Override
-    public List<String> getAmenidades() {
-         this.getBoleto().getAmenidades().add("TV Satelital");
-         return this.getBoleto().getAmenidades();
+
+    @Override
+    public String getAmenidades() {
+        return this.getBoleto().getAmenidades() + ", Tv Satelital";
     }
 
     @Override
     public Double getCosto() {
-        return this.getBoleto().getCosto()+75.0;
+        return this.getBoleto().getCosto() + 75.0;
     }
 
-
-    
 }

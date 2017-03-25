@@ -16,17 +16,14 @@ public class BebidasAlcoholicas extends BoletoDeAvionDecorator {
     public BebidasAlcoholicas(BoletoDeAvion boleto) {
         super(boleto);
     }
-    
-    
-    
-      @Override
-    public List<String> getAmenidades() {
-         this.getBoleto().getAmenidades().add("Bebidas Alcoholicas Ilimitadas");
-         return this.getBoleto().getAmenidades();
+
+    @Override
+    public String getAmenidades() {
+        return this.getBoleto().getAmenidades() + ", Bebidas Alcolholicas Ilimitadas";
     }
 
     @Override
     public Double getCosto() {
-        return this.getBoleto().getCosto()+25.0;
+        return this.getBoleto().getCosto() + 25.0;
     }
 }

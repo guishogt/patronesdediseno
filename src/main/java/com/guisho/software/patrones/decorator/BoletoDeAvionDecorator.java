@@ -15,18 +15,17 @@ import java.util.List;
 public abstract class BoletoDeAvionDecorator implements BoletoDeAvion {
 
     private BoletoDeAvion boleto;
-    private List<String> amenidades;
 
-    public BoletoDeAvionDecorator(BoletoDeAvion boleto) {
+    public BoletoDeAvionDecorator(BoletoDeAvion boleto) {        
         this.boleto = boleto;
-        this.amenidades=new ArrayList<String>();
     }
     
-    public abstract List<String> getAmenidades();
+    public abstract String getAmenidades();
     public abstract Double getCosto();
     
     public BoletoDeAvion getBoleto(){
         return this.boleto;
+        
     }
     
     

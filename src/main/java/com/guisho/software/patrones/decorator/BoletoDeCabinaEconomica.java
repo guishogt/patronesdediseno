@@ -12,18 +12,15 @@ import java.util.List;
  *
  * @author lfernandez
  */
-public class BoletoDeCabina implements BoletoDeAvion{
+public class BoletoDeCabinaEconomica implements BoletoDeAvion {
 
-    List<String> amenidades = new ArrayList<String>();
-    public BoletoDeCabina() {
-        this.amenidades.add("Boleto Cabina");
+
+    public BoletoDeCabinaEconomica() {
     }
-        
 
-    
     @Override
-    public List <String> getAmenidades() {
-        return this.amenidades;
+    public String getAmenidades() {
+        return "Boleto Sencillo Cabina Económica";
     }
 
     @Override
@@ -31,7 +28,4 @@ public class BoletoDeCabina implements BoletoDeAvion{
         return 1000.0;
     }
 
-   
-    
-    
 }

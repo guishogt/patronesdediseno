@@ -11,22 +11,19 @@ import java.util.List;
  *
  * @author lfernandez
  */
-public class IngresoPreferencial extends BoletoDeAvionDecorator{
+public class IngresoPreferencial extends BoletoDeAvionDecorator {
 
     public IngresoPreferencial(BoletoDeAvion boleto) {
         super(boleto);
     }
-    
-    
-    
-      @Override
-    public List<String> getAmenidades() {
-         this.getBoleto().getAmenidades().add("Ingreso Preferencial");
-         return this.getBoleto().getAmenidades();
+
+    @Override
+    public String getAmenidades() {
+        return this.getBoleto().getAmenidades() + ", Ingreso Preferencial";
     }
 
     @Override
     public Double getCosto() {
-        return this.getBoleto().getCosto()+100.0;
+        return this.getBoleto().getCosto() + 101.0;
     }
 }

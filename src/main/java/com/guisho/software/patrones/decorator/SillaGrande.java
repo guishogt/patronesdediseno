@@ -19,9 +19,8 @@ public class SillaGrande extends BoletoDeAvionDecorator{
  
     
   @Override
-    public List<String> getAmenidades() {
-         this.getBoleto().getAmenidades().add("Silla más grande");
-         return this.getBoleto().getAmenidades();
+    public String getAmenidades() {
+         return this.getBoleto().getAmenidades()+", Silla Mas Grande";
     }
 
     @Override

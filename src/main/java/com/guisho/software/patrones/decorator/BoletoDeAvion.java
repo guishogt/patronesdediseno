@@ -13,6 +13,6 @@ import java.util.List;
  */
 public interface BoletoDeAvion {
     
-    List<String> getAmenidades();    
+    String getAmenidades();    
     Double getCosto();
 }
