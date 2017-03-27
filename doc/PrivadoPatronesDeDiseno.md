@@ -1,3 +1,4 @@
+
 #1. Introducción. 
 
 Términos en inglés y en español. 
@@ -810,7 +811,7 @@ La idea básica del patrón es sencilla: crear una copia de un objeto para ahorr
 
 ## 3.6 Singleton
 
-El Singleton Pattern, a diferencia de los otros patrones de diseño creacionales, no se encarga de la creación de objetos en sí, sino que se enfoca en la restricción en la creación de un objeto. Este patrón es ampliamente utilizado por muchos *frameworks*, y también es uno de los más fáciles de aprender y utilizar. 
+El *Singleton Pattern*, a diferencia de los otros patrones de diseño creacionales, no se encarga de la creación de objetos en sí, sino que se enfoca en la restricción en la creación de un objeto. Este patrón es ampliamente utilizado por muchos *frameworks*, y también es uno de los más fáciles de aprender y utilizar. 
 
 Siempre que se crea un objeto nuevo (en Java con la palabra reservada ```new```) se invoca al constructor del objeto para que cree una instancia. Por lo general los constructores son públicos. El *singleton* lo que hace es convertir al constructor en privado, de manera que nadie lo pueda instanciar. Entonces, si el constructor es privado, ¿cómo se instancia el objeto? Pues a través de un método público y estático de la clase. En este método se revisa si el el objeto ha sido instanciado previamente. Si no ha sido instanciado, llama al constructor y guarda el objeto creado en una variable estática del objeto. Si el objeto ya fue instanciado anteriormente, lo que hace este método es devolver la referencia al estado creado anteriormente. 
 
@@ -820,64 +821,53 @@ En los patrones anteriores se utilizó un ```Traductor```. Imagínese que el tra
 
 ```java
 
-public class Traductor{
+public class TraductorPesado {
 
-      private static boolean instanciated=false;
+    private static boolean instanciated = false;
 
-      private static Traductor traductorInstance;
+    private static TraductorPesado traductorInstance;
 
-     /**
+    /**
+     * Notar que el constructor es privado!
+     */
+    private TraductorPesado() {
+        //cargar un diccionario a memoria  a través de un WebService.
+    }
 
-       *Notar que el constructor es privado!
+    public static TraductorPesado getTraductor() {
+        if (!TraductorPesado.instanciated) {
+            TraductorPesado.traductorInstance = new TraductorPesado();
+            TraductorPesado.instanciated = true;
+        }
+        return TraductorPesado.traductorInstance;
+    }
 
-      */
+    public String translate(String toTranslate) {
 
-      private Traductor(){
+        //mucho código bonito va aquí
+        return null;
+    }
 
-          //cargar un diccionario a memoria  a través de un WebService.
-
-     }
-
-    public static Traductor getTraductor(){
-
-           if (! Traductor.instanciated){
-
-                 Traductor.traductorInstance= new Traductor();
-
-                 Traductor.instanciated=true;
-
-           }
-
-          return Traductor.traductorInstance;
-
-   }
-
-    public String translate(String toTranslate){
-
-       //mucho código bonito va aquí
-
-    } 
-
-}
-```
+}```
 
 En cualquier lugar de la aplicación que se quiera utilizar hacer una traducción se debería hacer lo siguiente:
 
 ```java
-Traductor.getTraductor().translate("unaPalabra");
+TraductorPesado.getTraductorPesado().translate("unaPalabra");
 ```
 
 Con esto se logra que nadie, dentro del ambiente de la máquina virtual, pueda hacer lo siguiente. 
 ```java
-Traductor t = new Traductor();
+TraductorPesado t = new TraductorPesado();
 ```
 
-Es un gran beneficio porque se puede controlar mejor la manera en la que```Traductor``` puede ser usada. Evita malos usos de la clase y se asegura que a lo más hay una instancia del objeto en toda la aplicación.
+Es un gran beneficio porque se puede controlar mejor la manera en la que```TraductorPesado``` puede ser usada. Evita malos usos de la clase y se asegura que a lo más hay una instancia del objeto en toda la aplicación.
 
 Hay muchas maneras de crear los Singletons, que pueden complicarse. En este ejemplo se utiliza un booleano estático, pero no siempre es necesario, se pudo  haber inicializado ```traductorInstance``` como ```null```, y en vez de verificar la variable booleana, verificar si la instancia es null o no.
 
-```java
 
+TODO Do Code
+```java
 public class Traductor{
 
       private static  Traductor traductorInstance=null;
@@ -915,7 +905,7 @@ public class Traductor{
 }
 ```
 
-O, para hacer las cosas más sencillas (que no siempre conviene) se podría haber decidido evitar la evaluación en ```getTraductor``` y crear el objeto cuando al momento de declararlo:
+O, para hacer las cosas más sencillas (que no siempre conviene) se podría haber decidido evitar la evaluación en ```getTraductorPesado``` y crear el objeto cuando al momento de declararlo:
 
 ```java
 
@@ -980,6 +970,142 @@ Con mucha frecuencia el diseño de un dominio específico para un sistema inicia
 
 
 ## 4.1 Decorator
+
+En muchas ocasiones, una vez creado un objeto, la dificultad consiste en agregarle funcionalidad una vez creado. Esto se vuelve especialmente complicado cuando el objeto tiene una serie de combinaciones que es posible que lo "decoren". En el caso de la programación orientada a objetos, una manera natural de lidiar con la complejidad y las combinaciones, es utilizar la herencia. Sin embargo, como estamos a punto de ver, esto puede llevar a problemas muy fuertes. 
+
+El decorador es un envolvente de la clase original. Es decir, el decorador y el decorado implementan la misma interfase. Esto permite al decorador agregar funcionalidad a cada método (declarado en la interfaz) de la clase decorada. Esto permite agregar funcionalidad a un objeto sin modificar su estructura. 
+
+
+Supóngase que se está vendiendo boletos de avión. Como es de esperar, al momento de hacer el modelo de dominio, en algún lado ha de aparecer una interfaz, o una clase abstracta llamada ```BoletoDeAvion```. Para simplificar, esta interfaz (que para utilizar el patrón decorador es mejor utilizar una interfaz) tendrá únicamente dos métodos ```getAmenidades()``` y ```getCosto()```. Estos dos métodos, como es de esperarse, devolverán las amenidades y los costos de un avión. La aerolínea para la que se está haciendo el programa, tiene diferentes tipos de boletos. Por ejemplo tiene clase ejecutiva, tiene primera clase, y tiene clase económica. En la clase económica existen varias amenidades: existe la posibilidad de utilizar TV Satelital, de utilizar WiFi, de elegir una silla con más espacio, y ahora comenzó a ofrecerse el ingreso preferencial. 
+
+Utilizando de manera correcta, el equipo de desarrollo crea las siguientes clases que implementan ```BoletoDeAvion```: ```BoletoPrimeraClase```, ```BoletoClaseEjecutiva``` y ```BoletoClaseEconómica```. Ahora bien, en la clase económica ninguna de las amenidades anteriormente mencionadas se ofrece de manera estándar, sino que se ofrecen con un costo extra. Uno de los programadores, siguiendo las buenas prácticas comienza entones a desarrollar las siguientes clases ```BoletoClaseEcononicaWifi```, ```BoletoClaseEconomicaTVSatelital```, ```BoletoClaseEconomicaSillaGrande```, ```BoletoClaseEconomicaIngresoPreferencial```, que extienden a ```BoletoDeAvion```. La complejidad comienza cuando las combinaciones comienzan a aparecer, ya que también se pueden hacer combinaciones de amenidades: se puede tener TV Satelital y silla más grande. O Ingreso Preferencial y WiFi. La cantidad de combinaciones empieza a crecer con cada amenidad que se agrega, lo que hace poco práctico un esquema de extender clases clásico. Es aquí donde entra a jugar un papel beneficioso el Patrón Decorador. 
+
+Lo primero que se hace, es se crea la interfaz: 
+
+```java
+public interface BoletoDeAvion {
+    
+    String getAmenidades();    
+    Double getCosto();
+}
+
+```
+
+Después se crea la clase que implementa la interfaz
+
+
+```java
+public class BoletoDeCabinaEconomica implements BoletoDeAvion {
+
+
+    public BoletoDeCabinaEconomica() {
+    }
+
+    @Override
+    public String getAmenidades() {
+        return "Boleto Sencillo Cabina Económica";
+    }
+
+    @Override
+    public Double getCosto() {
+        return 1000.0;
+    }
+
+}
+```
+
+Como puede verse, esta clase implementa la funcionalidad básica de la clase concreta. Hasta este momento, una implementación tradicional orientada a objetos. Ahora es cuando comienza a aparecer el patrón decorador. Primero, se crea el decorador en sí, que es una clase abstracta que implementa la misma interfaz que el objeto a decorar, en este caso ```BoletoDeAvion```:
+
+
+```java
+public abstract class BoletoDeAvionDecorator implements BoletoDeAvion {
+
+    private BoletoDeAvion boleto;
+
+    public BoletoDeAvionDecorator(BoletoDeAvion boleto) {        
+        this.boleto = boleto;
+    }
+    
+    public abstract String getAmenidades();
+    public abstract Double getCosto();
+    
+    public BoletoDeAvion getBoleto(){
+        return this.boleto;  
+    }    
+}
+
+```
+
+Y se comienzan a crear los decoradores, en este caso se muestra el de Tv Satelital:
+```java
+public class TvSatelital extends BoletoDeAvionDecorator {
+
+    public TvSatelital(BoletoDeAvion boleto) {
+        super(boleto);
+    }
+
+    @Override
+    public String getAmenidades() {
+        return this.getBoleto().getAmenidades() + ", Tv Satelital";
+    }
+
+    @Override
+    public Double getCosto() {
+        return this.getBoleto().getCosto() + 75.0;
+    }
+
+}
+```
+
+Como extienden de una clase abstracta, es obligado implementar los métodos, y por lo tanto es ahí donde es posible agregar funcionalidad. 
+Ahora véase otro decorador, el de IngresoPreferencial:
+
+```java
+public class IngresoPreferencial extends BoletoDeAvionDecorator {
+
+    public IngresoPreferencial(BoletoDeAvion boleto) {
+        super(boleto);
+    }
+
+    @Override
+    public String getAmenidades() {
+        return this.getBoleto().getAmenidades() + ", Ingreso Preferencial";
+    }
+
+    @Override
+    public Double getCosto() {
+        return this.getBoleto().getCosto() + 101.0;
+    }
+}
+```
+
+Como se puede percibir, el mismo concepto. Ahora mostramos la clase principal que llama a todos los objetos: 
+```java
+        BoletoDeAvion boleto = new SillaGrande(
+                                    new IngresoPreferencial(
+                                            new BebidasAlcoholicas(
+                                                    new TvSatelital(
+                                                            new BoletoDeCabinaEconomica()
+                                                    )
+                                            )
+                                    )
+        );
+        
+        System.out.println("Hola, Bienvenido a Acatenango Airlines. ");
+        System.out.println("Amenidades <"+boleto.getAmenidades()+"> ");
+        System.out.println("Costo $<"+boleto.getCosto()+">");
+```
+
+En este caso se imprime lo siguiente: 
+
+```
+Hola, Bienvenido a Acatenango Airlines. 
+Amenidades <Boleto Sencillo Cabina Económica, Tv Satelital, Bebidas Alcolholicas Ilimitadas, Ingreso Preferencial, Silla Mas Grande> 
+Costo $<1501.0>
+```
+Puede notarse el poder que da el decorador, ya que evita el crear una gran cantidad (potencialmente inmanejable) de implementaciones concretas, dejando esa responsabilidad al decorador, permitiendo al usuario final del código, realizar las combinaciones que desee, sin preocuparse de crear complejidad. De esto se tratan los patrones de diseño: facilitar las implementaciones. 
+
+
 
 ## 4.2 Composite
 
@@ -1296,4 +1422,13 @@ El adapter se encarga no sólo de corregir los nombres de los métodos, sino tam
 ##5.6 Template
 
 ##5.7 Visitor
+
+#6. Conclusiones y recomendaciones
+
+TODO
+Sobre el uso del lenguaje, ingles o espanol?
+Recordar que los patrones son sólo un tool. 
+Recordar que los patrones aquí expuestos son para OOP, no para funcional u otros paradigmas. 
+Afilar el machete
+
 

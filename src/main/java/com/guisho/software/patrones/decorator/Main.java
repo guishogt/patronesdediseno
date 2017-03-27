@@ -23,9 +23,9 @@ public class Main {
                                     )
         );
         
-        System.out.println("Hola");
+        System.out.println("Hola, Bienvenido a Acatenango Airlines. ");
         System.out.println("Amenidades <"+boleto.getAmenidades()+"> ");
-        System.out.println("Costo <"+boleto.getCosto()+">");
+        System.out.println("Costo $<"+boleto.getCosto()+">");
         
         
     }
