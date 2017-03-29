@@ -1,15 +1,13 @@
 
-#1. Introducción. 
+# 1. Introducción. 
 
+Notes & Todo:
 Términos en inglés y en español. 
-
 Usando ejemplos. 
-
 Ejemplos propios. 
-
 They facilitate communication
 
-#2.  Los patrones de diseño
+# 2.  Los patrones de diseño
 
 El software es un tema muy amplio que tiene bastantes esquinas interesantes para digerir. Uno de los puntos cruciales de todo el ecosistema técnico y de negocios del software es la calidad del código. Crear código de alta calidad no es fácil, y para cualquier profesional en el área, los fundamentos de hacer buen software siempre deben ser revisados constantemente. Porque, aun con la avalancha de nuevos lenguajes de programación, paradigmas y *frameworks*, los fundamentos de hacer buen software son similares. 
 
@@ -19,7 +17,7 @@ En sí, un patrón de diseño es una solución puntual a un problema común y re
 
 La solidificación del concepto se dio en 1994, cuando Erich Gamma, Richard Helm, Ralph Johnson y John Vlissides (conocidos como "the gang of four (GoF)", o “la mara de los cuatro”) publicó el famoso libro “Design Patterns: Elements of Reusable Object-Oriented Software” (Patrones de diseño: elementos reusables para software orientado a objetos). A partir de ahí el concepto se popularizó, y las herramientas de desarrollo comienzan a incorporar el uso de patrones por todos lados, apareciendo el concepto de “refactorizar”, que es el concepto de aplicar patrones de diseño a software ya existente. 
 
-#3.  Patrones Creacionales. 
+# 3.  Patrones Creacionales. 
 
 Los patrones creacionales son los primeros que se abordarán, ya que naturalmente son los que aparecen inicialmente en las distintas etapas de desarrollo. 
 
@@ -955,10 +953,10 @@ Hay que tener especial cuidado cuando el Singleton se utiliza en un ambiente mul
 Concluyendo, la idea central del Singleton es esa: asegurar de que exista tan solo una instancia del objeto en toda la aplicación. Hay muchas maneras de implementar un Singleton (aquí solo vimos algunas). Es un patrón muy aplicado en Java, aunque, como todos los patrones, se puede implementar en cualquier lenguaje orientado a objetos. También se pueden hacer cosas interesantes uniendo el Singleton con otros patrones creacionales (recordemos que el singleton no busca crear, sino que limitar la creación).
 
 
-## 3.6 Object Pool
 
 
-#4.  Patrones Estructurales. 
+
+# 4.  Patrones Estructurales. 
 
  Los patrones estructurales (*structural patterns*) podrían llamarse patrones de relaciones, o algo parecido, porque su principal función es facilitar y mejorar las relaciones entre objetos.
 
@@ -1390,24 +1388,24 @@ El adapter se encarga no sólo de corregir los nombres de los métodos, sino tam
 
  ##4.7  Module
 
-#5.  Patrones de comportamiento.  
+# 5.  Patrones de comportamiento.  
 
-##5.1 Observer
+## 5.1 Observer
 
-##5.2 Chain of responsibility
+## 5.2 Chain of responsibility
 
-##5.3 Command
+## 5.3 Command
 
 
-##5.4 Interpreter
+## 5.4 Interpreter
 
-##5.5 Strategy
+## 5.5 Strategy
 
-##5.6 Template
+## 5.6 Template
 
-##5.7 Visitor
+## 5.7 Visitor
 
-#6. Conclusiones y recomendaciones
+# 6. Conclusiones y recomendaciones
 
 TODO
 Sobre el uso del lenguaje, ingles o espanol?
