@@ -1080,16 +1080,10 @@ public class IngresoPreferencial extends BoletoDeAvionDecorator {
 ```
 
 Como se puede percibir, el mismo concepto. Ahora mostramos la clase principal que llama a todos los objetos: 
+
 ```java
         BoletoDeAvion boleto = new SillaGrande(
-                                    new IngresoPreferencial(
-                                            new BebidasAlcoholicas(
-                                                    new TvSatelital(
-                                                            new BoletoDeCabinaEconomica()
-                                                    )
-                                            )
-                                    )
-        );
+         new IngresoPreferencial(new BebidasAlcoholicas(new TvSatelital(new BoletoDeCabinaEconomica()))));
         
         System.out.println("Hola, Bienvenido a Acatenango Airlines. ");
         System.out.println("Amenidades <"+boleto.getAmenidades()+"> ");
@@ -1119,6 +1113,7 @@ Piénsese en el siguiente problema: en muchos países se utilizan las espigas re
 Imagínese se tiene un sistema que maneja autos, barcos, aviones y parecidos. Generalmente los motores que se usan son de gasolina, pero las nuevas tendencias han popularizado los motores eléctricos. Se tiene  que el proveedor de vehículos eléctricos provee sus librerías para el motor eléctrico que es prácticamente igual a las implementaciones propias pero con otros nombres (prender en vez de encender, "mover más rápido" en vez de acelerar, etc.), y tiene una restricción extra: para poder acelerar o detener el motor, este tiene que estar conectado. Y surge el problema ¿cómo haver para que las  librerías propias puedan hacer uso del motor eléctrico? Una solución es re-escribirlas todas, pero el tiempo y costo de hacer eso es muy alto. 
 
 Entonces, se tiene: 
+
 ```java
 
  package com.guisho.software.patrones.adapter;
@@ -1362,35 +1357,24 @@ Como puede verse, este motor hace lo mismo que la implementación propia, pero d
      }
 
  }
- ```
  
+```
 
 El adapter se encarga no sólo de corregir los nombres de los métodos, sino también de cosas como conectar y desconectar el motor, cosas que a la implementación propia no le importan. Pero lo más importante es que ahora se puede utilizar esta implementación de Motor en el sistema propioutilizando la implementación de ellos. Por ejemplo, se pueden hacer cosas como esta:
  
- ```java
+```java
 
          Motor motor = new MotorEconomico();
-
          motor.encender();
-
          motor.acelerar();
-
          motor.apagar();
-
          motor = new MotorGaston();
-
          motor.encender();
-
          motor.acelerar();
-
          motor.apagar();
-
          motor = new MotorElectricoAdapter() ;
-
          motor.encender();
-
          motor.acelerar();
-
          motor.apagar();
 ```         
 
