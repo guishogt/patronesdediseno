@@ -1380,13 +1380,13 @@ El adapter se encarga no sólo de corregir los nombres de los métodos, sino tam
  
  TAJUMULCO
 
- ##4.4 Bridge
+ ## 4.4 Bridge
 
- ##4.5 Facade
+ ## 4.5 Facade
 
- ##4.6 Proxy
+ ## 4.6 Proxy
 
- ##4.7  Module
+ ## 4.7  Module
 
 # 5.  Patrones de comportamiento.  
 
