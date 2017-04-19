@@ -47,5 +47,13 @@ public abstract class AbstractEmpleado implements Empleado{
     public void setDepartamento(String departmento) {
         this.departamento = departmento;
     }
+    
+    public List<Empleado> getEquipo(){
+        throw new UnsupportedOperationException();
+    }
+    public void addEmpleado(Empleado e){
+        throw new UnsupportedOperationException();
+        
+    }   
  
 }

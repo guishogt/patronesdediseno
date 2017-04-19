@@ -1101,6 +1101,164 @@ Puede notarse el poder que da el decorador, ya que evita el crear una gran canti
 
 ## 4.2 Composite
 
+El patrón *composite*  tiene mucho que ver con la capacidad natural de los ambiente orientados a objetos para manejar estructuras jerárquicas, en este caso árboles. Un árbol tiene nodos y hojas El enfoque de este patrón es tratar de la misma manera a objetos que son similares pero que siguen una misma estructura. En esencia, este patrón facilita el tratamiento de padres-hijos en forma de árbol. El nombre de *Composite* viene a ser como "compuesto" y describe lo que hace este patrón. 
+
+El objetivo de este patrón es que el *Composite* pueda ser tratado de una manera atómica, tal cual si fuera una hoja de un árbol. La esencia es la capacidad que se le da a un cliente de hacer operaciones sobre un objeto sin saber si tiene objetos anidados.
+
+Para demostrar el uso del patrón *composite* supóngase que se hará una aplicación para manejar el recurso humano de una empresa. Lo primero que se hará es implementar la interfaz ```Empleado``` que iría de la siguiente manera: 
+
+```java
+public interface Empleado {
+    public String getNombre();
+    public String getApellido();
+    public String getDepartamento();
+    public String getDescripcion();
+    
+    public List<Empleado> getEquipo();
+    public void addEmpleado(Empleado e);    
+}
+```
+
+Nótese que uno de los propósitos será el tener una operación común entre el compuesto (*composite*) y el nodo hoja. En este caso será ```getDescripcion()```. 
+
+Aunque se podría implementar ahora directamente el primer objeto, en aras de mantener buenas prácticas, se hará una clase abstracta primero:
+
+```java
+ 
+public abstract class AbstractEmpleado implements Empleado{
+
+    private String nombre;
+    private String apellido;
+    private String departamento;
+
+    public AbstractEmpleado(String nombre, String apellido, String departamento) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.departamento = departamento;
+    }
+
+    
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public String getDepartamento() {
+        return departamento;
+    }
+
+    public void setDepartamento(String departmento) {
+        this.departamento = departmento;
+    }
+    
+    public List<Empleado> getEquipo(){
+        throw new UnsupportedOperationException();
+    }
+    public void addEmpleado(Empleado e){
+        throw new UnsupportedOperationException();
+        
+    }   
+ 
+```
+Puede notarse que es una clase muy sencilla, prácticamente un *bean* que contiene la información del empleado. Las únicas excepciones son ```getEquipo``` y ```addEmpleado```, que para los nodos no tiene sentido implementarlas, por lo que se dejan como una excepción.  También se creará una implementación concreta de ```Empleado```:
+
+```java
+public class Programador extends AbstractEmpleado{
+
+    public Programador(String nombre, String apellido, String departamento) {
+        super(nombre, apellido, departamento);
+    }
+
+    @Override
+    public String getDescripcion() {
+        return "Nombre: <"+this.getNombre()+"> Apellido <"+this.getApellido()+"> Departamento <"+this.getDepartamento()+"> Puesto <Programador>";
+    }    
+}
+```
+Así como ```Programador```, se puede crear otra ```GerenteDeProyecto```, otra ```DirectorDeArea```, etc. Lo importante es que estas clases implementen, o hereden de una clase que impelemente ```Empleado```.
+
+Ahora se creará el compuesto (o *composite*), que implementa el espíritu del patrón. A la operación tradicional del objeto padre, se le agrega una colección (o lista) y una manera de agregar items a esta lista. Como el caso de ```Empleado```, podría hacerse una impelmentación directa, pero se opta en este caso por hacer una clase abstracta antes: 
+
+```java
+public abstract class CompositeEmpleado extends AbstractEmpleado{
+    
+    private List<Empleado> equipo;
+    
+    public CompositeEmpleado(String nombre, String apellido, String departamento) {
+        super(nombre, apellido, departamento);
+        equipo=new ArrayList<Empleado>();
+    }
+
+    public List<Empleado> getEquipo() {
+        return equipo;
+    }
+
+    public void addEmpleado (Empleado e){
+        this.equipo.add(e);
+    }
+    
+    @Override
+    public String getDescripcion() {
+        String tr=  "Nombre: <"+this.getNombre()+"> Apellido <"+this.getApellido()+"> Departamento <"+this.getDepartamento()+"> Puesto <Programador Lider> Equipo: \n";
+        for (Empleado e:this.equipo){
+            tr+="\t"+e.getDescripcion()+"\n";
+        }
+        return tr; 
+    
+    }    
+
+}
+```
+
+Y ahora una clase concreta que extiende a ```CompositeEmpleado```. De nuevo, esta pudo haberse implementado directamente, siempre y cuando extienda a ```Empleado```:
+```java
+public class ProgramadorLider extends CompositeEmpleado{
+    
+    public ProgramadorLider(String nombre, String apellido, String departamento) {
+        super(nombre, apellido, departamento);
+    }
+
+    
+}
+
+
+```
+
+
+Ahora la implementación de un cliente utilizando el patrón: 
+```java
+public class Main {
+    public static void main(String[] args) {
+        
+        Empleado luis = new Programador("Luis", "Perez", "Desarrollo");
+        Empleado maria = new Programador("Maria", "Lopez", "Desarrollo");
+        Empleado pedro = new ProgramadorLider("Pedro", "Juarez", "Desarrollo");
+        pedro.addEmpleado(luis);
+        pedro.addEmpleado(maria);
+        Empleado isabel = new GerenteDeProyecto("Isabel", "Godinez", "Comercial");
+        isabel.addEmpleado(pedro);
+        System.out.println(isabel.getDescripcion());
+        
+    }
+            
+}
+```
+
+Ya sea un Programador, un Programador Lider, un Gerente, o cualquier puesto nuevo en el futuro, todos pueden tratarse de la misma manera, lo que provee la flexibilidad de que en el futuro se agregue cualquier puesto nuevo, y cualquier estructura nueva. 
+
+
+
 ## 4.3  Adapter
 
 
@@ -1115,15 +1273,11 @@ Entonces, se tiene:
 ```java
 
  package com.guisho.software.patrones.adapter;
-
  public abstract class Motor {
 
     abstract public void encender();
-
     abstract public void acelerar();
-
     abstract public void apagar();
-
     //...mas metodos que hacen muchas cosas
 
  }
@@ -1134,33 +1288,22 @@ Entonces, se tiene:
  ```java
 
  package com.guisho.software.patrones.adapter;
-
  public class MotorEconomico extends Motor {
-
      public MotorEconomico(){
-
          super();
-
          System.out.println("Craendo motor economico");
-
      }
 
      public void encender() {
-
          System.out.println("Encendiendo motor economico.");
-
      }
 
      public void acelerar() {
-
-         System.out.println("Acelerando motor economico.");
-
+         System.out.println("Acelerando motor economico.");'
      }
 
      public void apagar() {
-
          System.out.println("Apagando motor economico.");
-
      }
 
  }
@@ -1175,29 +1318,20 @@ Entonces, se tiene:
  public class MotorGaston extends Motor {
 
      public MotorGaston(){
-
          super();
-
          System.out.println("Creando el motor gaston");
-
      }
 
      public void encender() {
-
          System.out.println("Bum, bum....encendiendo motor gaston");
-
      }
 
      public void acelerar() {
-
          System.out.println("Buuuuuuuuuuuum, acelerando y gastando muuuucha gas");
-
      }
 
      public void apagar() {
-
          System.out.println("Apagando motor gaston");
-
      }
 
  }
@@ -1208,21 +1342,13 @@ Entonces, se tiene:
  ```java
 
          Motor motor = new MotorEconomico();
-
          motor.encender();
-
          motor.acelerar();
-
          motor.apagar();
-
         //hacer mas cosas....
-
          motor = new MotorGaston();
-
          motor.encender();
-
          motor.acelerar();
-
          motor.apagar();
          
 ```         
@@ -1231,73 +1357,47 @@ Entonces, se tiene:
 
 ```java
  public class MotorElectrico {
-
      private boolean conectado = false;
-
      public MotorElectrico() {
-
          System.out.println("Creando motor electrico");
-
          this.conectado = false;
-
      }
 
      public void conectar() {
-
          System.out.println("Conectando motor eléctrico");
-
          this.conectado = true;
-
      }
 
      public void activar() {
-
          if (!this.conectado) {
-
              System.out.println("No se puede activar porque no esta conectado el motor electrico");
-
          } else {
-
              System.out.println("Esta conectado, activando motor electrico....");
-
          }
 
      }
 
      public void moverMasRapido() {
-
          if (!this.conectado) {
-
              System.out.println("No se puede mover rapido el motor electrico porque no esta conectado...");
-
          } else {
-
              System.out.println("Moviendo mas rapido...aumentando voltaje");
-
          }
-
      }
 
      public void detener() {
 
          if (!this.conectado) {
-
              System.out.println("No se puede detener motor electrico porque no esta conectado");
-
          } else {
-
              System.out.println("Deteniendo motor electrico");
-
          }
 
      }
 
      public void desconectar() {
-
          System.out.println("Desconectando motor electrico...");
-
          this.conectado = false;
-
      }
 
  }
@@ -1311,49 +1411,31 @@ Como puede verse, este motor hace lo mismo que la implementación propia, pero d
 
 ```java
  package com.guisho.software.patrones.adapter;
-
  public class MotorElectricoAdapter extends Motor{
 
      private MotorElectrico motorElectrico;
-
      public MotorElectricoAdapter(){
-
          super();
-
          this.motorElectrico = new MotorElectrico();
-
          System.out.println("Creando motor Electrico adapter");
-
      }
 
      public void encender() {
-
          System.out.println("Encendiendo motorElectricoAdapter");
-
          this.motorElectrico.conectar();
-
          this.motorElectrico.activar();
-
      }
 
      public void acelerar() {
-
          System.out.println("Acelerando motor electrico...");
-
          this.motorElectrico.moverMasRapido();
-
      }
 
      public void apagar() {
-
          System.out.println("Apagando motor electrico");
-
          this.motorElectrico.detener();
-
          this.motorElectrico.desconectar();
-
      }
-
  }
  
 ```
@@ -1378,15 +1460,15 @@ El adapter se encarga no sólo de corregir los nombres de los métodos, sino tam
 
  El patrón adaptador aparece en todos lados, aunque muchas veces no se le llama adapter específicamente.  
  
- TAJUMULCO
+ 
 
- ## 4.4 Bridge
+## 4.4 Bridge
 
- ## 4.5 Facade
+## 4.5 Facade
 
- ## 4.6 Proxy
+## 4.6 Proxy
 
- ## 4.7  Module
+## 4.7  Module
 
 # 5.  Patrones de comportamiento.  
 

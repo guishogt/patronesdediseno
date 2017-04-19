@@ -5,13 +5,19 @@
  */
 package com.guisho.software.patrones.composite;
 
+import java.util.List;
+
 /**
  *
  * @author lfernandez
  */
-public interface Empleado {    
+public interface Empleado {
+
     public String getNombre();
     public String getApellido();
     public String getDepartamento();
-    public String getDescripcion();    
+    public String getDescripcion();
+
+    public List<Empleado> getEquipo();
+    public void addEmpleado(Empleado e);
 }

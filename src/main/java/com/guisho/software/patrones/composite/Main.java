@@ -12,12 +12,12 @@ package com.guisho.software.patrones.composite;
 public class Main {
     public static void main(String[] args) {
         
-        Programador luis = new Programador("Luis", "Perez", "Investigación");
-        Programador maria = new Programador("Maria", "Lopez", "Investigación");
-        ProgramadorLider pedro = new ProgramadorLider("Pedro", "Juarez", "Investigación");
+        Empleado luis = new Programador("Luis", "Perez", "Desarrollo");
+        Empleado maria = new Programador("Maria", "Lopez", "Desarrollo");
+        Empleado pedro = new ProgramadorLider("Pedro", "Juarez", "Desarrollo");
         pedro.addEmpleado(luis);
         pedro.addEmpleado(maria);
-        GerenteDeProyecto isabel = new GerenteDeProyecto("Isabel", "Godinez", "Comercial");
+        Empleado isabel = new GerenteDeProyecto("Isabel", "Godinez", "Comercial");
         isabel.addEmpleado(pedro);
         System.out.println(isabel.getDescripcion());
         
