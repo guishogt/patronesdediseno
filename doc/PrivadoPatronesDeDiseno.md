@@ -1463,6 +1463,34 @@ El adapter se encarga no sólo de corregir los nombres de los métodos, sino tam
  
 
 ## 4.4 Bridge
+El *bridge* (o puente) es un patrón que se utiliza para desligar una abstracción de su implementación, de manera que ambas puedan variar de manera independiente. Para ello se crean dos estructuras jerárquicas, dónde antes sólo había una. Una estructura es para la abstracción, y otra para la implementación. Esto permite la flexibilidad de modificar la una sin cambiar la otra. Para ello, la abstracción contiene una referencia para la implementación. Sub clases de la abstracción son llamadas abstracciones refinadas, y subclases del implementador son implementaciones concretas. Como es posible cambiar las referencias al implementador en la abstracción, es posible cambiar la abstracción en tiempo de corrida. Además cambios al implementador no afectan al código del cliente. 
+
+Este diagrama muestra las diferencias de una abstracción antes de utilizar este patrón y después de: 
+
+
+Antes:
+
+```
+		 	-------------Figura-------------
+			/								\
+		Rectángulo 				  		   Círculo
+	/				\					/			\
+RectánguloRojo RectánguloAzul		CírculoRojo	CírculoAzul
+
+```
+
+Después:
+
+```
+		  ------Figura------				----Color----
+		/					\				/			\
+	Rectángulo(Color)	Círculo(Color)	Rojo			Azul
+
+```
+Otra manera de verlo, es que este patrón permite variar no sólo las implementaciones concretas, sino también las abstracciones. Cuando sucede esto? Cuando ambas pueden variar y no puede saberse de antemano. Tómese en cuenta el siguiente ejemplo: una empresa recibe en 2008 un requerimiento para implementar una aplicación de mensajería instantánea. Esta aplicación podrá enviar mensajes de texto, y solamente texto, ya que ni las plataformas de los teléfonos ni las telecomunicaciones dan para más. Esta aplicación debe poder correr en las nuevas plataformas Android e iPhone (supóngase que ambas corren *Java*). 
+
+El líder del proyecto   
+
 
 ## 4.5 Facade
 
