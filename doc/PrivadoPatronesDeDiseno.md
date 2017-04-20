@@ -1489,8 +1489,134 @@ Después:
 ```
 Otra manera de verlo, es que este patrón permite variar no sólo las implementaciones concretas, sino también las abstracciones. Cuando sucede esto? Cuando ambas pueden variar y no puede saberse de antemano. Tómese en cuenta el siguiente ejemplo: una empresa recibe en 2008 un requerimiento para implementar una aplicación de mensajería instantánea. Esta aplicación podrá enviar mensajes de texto, y solamente texto, ya que ni las plataformas de los teléfonos ni las telecomunicaciones dan para más. Esta aplicación debe poder correr en las nuevas plataformas Android e iPhone (supóngase que ambas corren *Java*). 
 
-El líder del proyecto   
+El líder del proyecto, haciendo el código escalable crea una clase ```IMAndroid```, y una ```IMIphone``` (en el ejemplo se utilizará IM del inglés *Instant Messenger*), pero estas clases ambas son sub clases de una clase abstracta llamada ```AbstractIM```. Pasa el tiempo y la capacidad de los teléfonos móviles aumenta, y en ancho de banda de las redes también. Entonces se le solicita al equipo que cree una implementación que soporte envío de mensajes de voz, pero también deben soportarse los teléfonos móviles que sólo tengan la capacidad de texto. El líder del proyecto hace un *re-factoring* y nombra a las primeras dos clases ```IMAndroidTexto``` y ```IMIphoneTexto```, y agrega las dos nuevas clases que contienen la nueva funcionalidad: ```IMAndroidVoz``` y ```IMIPhoneVoz```. Se tienen ahora cuatro clases concretas. 
 
+Pasa el tiempo y aparece un nuevo requerimiento: ahora pueden enviarse mensajes de video también. Entonces se crea ```IMAndroidVideo``` y ```IMIphoneVideo```. YA son seis las clases concreats. Aparece un nuevo competidor en el mercado: Windows Phone. Para ello el pobre desarrollador líder crea 3 nuevas clases concretas: ```IMWindowsTexto```, ```IMWindowsVoz``` y ```IMWindowsVideo```. Ya son nueve las clases. ¿Qué pasa si ahora se le solicita llamadas en tiempo real? Deberá crear 3 nuevas clases. ¿Y sí aparece una nueva plataforma? Otras tantas. Es entonces cuando el líder del proyecto aprende de patrones de diseño, y para evitar esta explosión de clases, hace el uso del patrón *Bridge*. 
+
+Primero, crea la abstracción, que es la clase abstracta inicial: 
+
+```java
+public abstract class IMAbstracto {
+    protected IPlataformaMovil plataforma;
+    
+    public IMAbstracto(IPlataformaMovil plataforma){
+        this.plataforma=plataforma;
+    }
+    
+    public abstract void enviarMensaje();
+    
+}
+```
+ Muy importante de notar que en la abstracción hay una referencia a la interfaz de la implementación (este es el corazón de este patrón). A su vez, esa interfaz es la siguiente:
+ 
+```java
+
+ public interface IPlataformaMovil {
+    public String getNombre();
+       
+}
+
+```
+
+Obviamente esto es una simplificación para mostrar el ejemplo, en una implementación real en esta interfaz habrían muchos más métodos. Ahora se procede a crear  las primeras dos plataformas, que son las implementaciones concretas: 
+
+Android:  
+```java
+
+ public class PlataformaAndroid implements IPlataformaMovil {
+
+    @Override
+    public String getNombre() {
+        return "Android";
+    }
+    
+}
+
+``` 
+
+Y IPhone
+```java
+
+public class PlataformaIPhone implements IPlataformaMovil{
+
+
+    public String getNombre() {
+        return "iPhone";
+    }
+    
+} 
+
+``` 
+
+Ahora se crean las refinaciones de las abstracción, primero los mensajes de texto, y luego los de voz.  
+
+Mensaje de texto
+```java
+ public class IMTexto extends IMAbstracto {
+    
+    public IMTexto(IPlataformaMovil plataforma) {
+        super(plataforma);
+    }
+
+    @Override
+    public void enviarMensaje() {
+        System.out.println("Enviando mensaje de texto en <"+this.plataforma.getNombre()+">");
+    }        
+    
+}
+ 
+``` 
+Mensaje de voz
+```java
+public class IMVoz extends IMAbstracto{
+
+    public IMVoz(IPlataformaMovil plataforma) {
+        super(plataforma);
+    }
+
+    @Override
+    public void enviarMensaje() {
+        System.out.println("Enviando mensaje de voz en <"+this.plataforma.getNombre()+">");
+        
+    }
+    
+} 
+``` 
+
+Y finalmente el cliente: 
+```java
+ public class Main {
+    
+    
+    public static void main(String[] args) {
+        System.out.println("Bienvenidos. Vamos a mandar mensajes de texto.");
+        IMAbstracto imTextoAndroid = new IMTexto(new PlataformaAndroid());
+        imTextoAndroid.enviarMensaje();
+        IMAbstracto imTextoIPhone = new IMTexto(new PlataformaIPhone());
+        imTextoIPhone.enviarMensaje();
+        
+        IMAbstracto imVozAndroid = new IMVoz(new PlataformaAndroid());
+        imVozAndroid.enviarMensaje();
+        IMAbstracto imVozIPhone = new IMVoz(new PlataformaIPhone());
+        imVozIPhone.enviarMensaje();
+        
+        
+        
+    }
+}
+``` 
+
+Si se corre el cliente, el resultado será:
+```
+Bienvenidos. Vamos a mandar mensajes de texto.
+Enviando mensaje de texto en <Android>
+Enviando mensaje de texto en <iPhone>
+Enviando mensaje de voz en <Android>
+Enviando mensaje de voz en <iPhone>
+ 
+``` 
+
+Como puede notarse, lo que se tiene ahora son dos jerarquías, una de la abstracción (IM) y la otra de la implementación (las plataformas). Lo que se ha logrado es que sean independientes la una de la otra totalmente. Si es necesario agregar una nueva plataforma, simplemente se agrega, pero si hay que agregar otra funcionalidad a mensajes de texto, también, simplemente se agrega. Al hacerlo no es necesario modificar la otra, y -muy importante- no es necesario modificar los clientes existentes. 
 
 ## 4.5 Facade
 
