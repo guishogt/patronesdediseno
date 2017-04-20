@@ -1613,13 +1613,42 @@ Enviando mensaje de texto en <Android>
 Enviando mensaje de texto en <iPhone>
 Enviando mensaje de voz en <Android>
 Enviando mensaje de voz en <iPhone>
- 
 ``` 
 
 Como puede notarse, lo que se tiene ahora son dos jerarquías, una de la abstracción (IM) y la otra de la implementación (las plataformas). Lo que se ha logrado es que sean independientes la una de la otra totalmente. Si es necesario agregar una nueva plataforma, simplemente se agrega, pero si hay que agregar otra funcionalidad a mensajes de texto, también, simplemente se agrega. Al hacerlo no es necesario modificar la otra, y -muy importante- no es necesario modificar los clientes existentes. 
 
 ## 4.5 Facade
 
+El patrón *facade* o fachada, es un patrón que provee una interfaz unificada -y simplificada- de un conjunto de sub-sistemas más complejos. Normalmente es una interfaz de más alto nivel porque permite que los sub-sistemas sean más fáciles de usar. 
+
+Una de las grandes ventajas del patrón *facade* es que facilita el uso de las librerías complejas, sin ocultar necesariamente su comportamiento. Al mismo tiempo promueve el buen uso de la ley de Demeter. Esta ley especifica lo siguiente: Un método de un objeto debe invocar solamente los métodos de los siguientes tipos de objetos: 
+ * De sí mismo. 
+ * De parámetros que se reciban. 
+ * De cualquier objeto que el cree o instancíe. 
+ * De sus componentes directos. 
+
+ 
+ El adecuado uso de esta ley reduce la interdependencia entre clases, y hace que el software se mucho más escalable. La mayor desventaja es que usualmente esto implica escribir más cómodo. 
+ 
+ Para tener una visión gráfica de como ayuda este patrón, véase la siguiente gráfica, que sería antes de usar el patrón: 
+ ![Sin Facade](https://guishogt.github.io/images/sinFacade.png)
+ 
+ Ahora con el patrón:
+ ![Con Facade](https://guishogt.github.io/images/conFacade.png)
+ 
+Como puede verse claramente, el cliente ahora no tiene que lidiar con las complejidades de los sub-sistemas, sino que trata sólo en el *facade*. 
+
+Considérese el siguiente ejemplo. 
+ 
+ 
+ Por su simplicidad, una ventaja de este patrón es que puede aplicarse en fases tardías de desarrollo sin involucrar cambios fundamentales en el código existente. 
+ 
+
+
+
+
+
+ 	
 ## 4.6 Proxy
 
 ## 4.7  Module
