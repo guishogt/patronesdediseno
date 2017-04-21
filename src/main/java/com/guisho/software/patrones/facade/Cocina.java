@@ -13,7 +13,7 @@ public class Cocina {
  
     private static Cocina cocina;
     
-    
+ 
     private Cocina(){
         System.out.println("Creando cocina");
     }

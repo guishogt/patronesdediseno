@@ -1638,10 +1638,263 @@ Una de las grandes ventajas del patrón *facade* es que facilita el uso de las l
  
 Como puede verse claramente, el cliente ahora no tiene que lidiar con las complejidades de los sub-sistemas, sino que trata sólo en el *facade*. 
 
-Considérese el siguiente ejemplo. 
+En el mundo real hay fachadas por todos lados, sin ellas sería imposible realizar muchas de las tareas diarias. Usualmente todas las personas que atienden en una tienda, o en un banco, o en un establecimiento cualquiera, funcionan como fachadas. En vez de interactuar con toda una organización, se interactúa con un simple punto de contacto. Por ejemplo un restaurante. En un restaurante uno no llega y va a ver a la cocina que platos hay disponibles, ni tampoco ingresa el pago directamente en la caja chica. En un restaurante uno interactúa solamente con el mesero, y es el quien interactúa con los otros sub-sistemas (la cocina, la contabilidad, etc.). 
+
+En este ejemplo se utilizará las siguientes clases e interfaces, aunque no todas se presentarán en este documento por no ser necesario: 
+	*  Un cliente, la clase ```Main```. 
+	*  Una clase ```Menu```.
+	*  Una interfaz ```MenuItem``` con dos implementaciones, ```Plato``` y ```Bebida```. 
+	*  Una clase ```Cocina```, una clase ```Cuenta```. 
+	*  Una clase ```Mesero``` que será el que funcione como *facade* o fachada. 
+
+Las clases ```Cocina``` y ```Cuenta``` son similares. Como es de imaginar, hace sentido que sean *singleton* porque se desea que sean únicas: 
+
+```java
+    private Cocina(){
+        System.out.println("Creando cocina");
+    }
+
+    /**
+     * Implementando un singleton. 
+     * @return 
+     */
+    public static Cocina getCocina(){
+        if (cocina==null){
+            cocina = new Cocina();
+        } 
+        return cocina;
+    }
+
+    MenuItem prepararPlatoOBebida(MenuItem bebida) {
+        System.out.println("\t En cocina preparando bebida <"+bebida.getNombre()+">");
+        //preparar la bebida
+        return bebida;
+    }
+```
+
+
+```java
+
+public class Cuenta {
+    private int numeroDeMesa;
+    private Date tiempoInicio;
+    private List <MenuItem> itemsCuenta;
+    private Double totalCuenta;
+    
+    public Cuenta(int numeroDeMesa){
+        this.itemsCuenta = new ArrayList();
+        this.totalCuenta=0d;
+        DateFormat df = DateFormat.getDateTimeInstance (DateFormat.MEDIUM, DateFormat.MEDIUM, new Locale ("en", "EN"));       
+        this.tiempoInicio=new Date();
+        String fechaFormateada = df.format (this.tiempoInicio);        
+        System.out.println("Creando cuenta para mesa <"+numeroDeMesa+"> a las <"+fechaFormateada+">");
+    }
+    
+    public void agregarItem(MenuItem menuItem){
+        this.itemsCuenta.add(menuItem);
+        this.totalCuenta=this.totalCuenta+menuItem.getPrecio();
+    }
+    
+    
+    public Double getTotalCuenta(){
+        System.out.println("\tResumen de la cuenta:");
+        for (MenuItem mi:this.itemsCuenta){
+            System.out.println("\t \t<"+mi.getNombre()+"> \t\t Q<"+mi.getPrecio()+">");            
+        }
+        System.out.println("\t ** Total <"+this.totalCuenta+">");
+        return this.totalCuenta;
+    }
+    public void pagar (Double pago){
+        System.out.println("Recibiendo <"+pago+">, por saldo de <"+this.totalCuenta+">");
+        System.out.println("Vuelto <"+(pago-this.totalCuenta)+">");
+        System.out.println("Muchas gracias por visitarnos!");
+        
+    }
+
+    public int getNumeroDeMesa() {
+        return numeroDeMesa;
+    }
+
+    public Date getTiempoInicio() {
+        return tiempoInicio;
+    }
+
+    public List<MenuItem> getItemsCuenta() {
+        return itemsCuenta;
+    }
+    
+    
+    
+}
+
+```
+
+```MenuItem``` es una interfaz sencilla, implementada por ```Bebida``` y ```Plato```
+	
+```java
+public interface MenuItem {    
+    public String getNombre();
+    public Double getPrecio();
+}
+```
+```Menu``` es, en esencia, una colección de MenuItems:
+
+```java
+public class Menu {
+
+    private List<MenuItem> itemsMenu;
+
+    private static Menu menu;
+
+    private Menu() {
+        System.out.println("Creando el menú");
+        //Agregar los items que existen....
+        this.itemsMenu = new ArrayList();
+
+        //agregando bebidas....
+        this.itemsMenu.add(new Bebida("Agua", 10d));
+        this.itemsMenu.add(new Bebida("Cerveza", 25d));
+        this.itemsMenu.add(new Bebida("Limonada", 19d));
+
+        //agregando platos
+        this.itemsMenu.add(new Plato("Hamburguesa", 20d));
+        this.itemsMenu.add(new Plato("Papas Fritas", 15d));
+        this.itemsMenu.add(new Plato("Hot Dog", 18d));
+
+    }
+
+    public static Menu getMenu() {
+        if (menu == null) {
+            menu = new Menu();
+        }
+        return menu;
+    }
+
+    public boolean existeEnMenu(String aBuscar) {
+        for (MenuItem mi : this.itemsMenu) {
+            if (mi.getNombre().toLowerCase().contains(aBuscar.toLowerCase()) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public MenuItem getItem(String item) {
+        for (MenuItem mi : this.itemsMenu) {
+            if (mi.getNombre().toLowerCase().contains(item.toLowerCase())) {
+                return mi;
+            }
+        }
+        return null;
+    }
+
+}
+```
+
+Un cliente podría interactuar con todas estas clases, pero en muchas ocasiones, no querrá. Del mismo modo que una persona no quiere tratar con el personal de cocina y de contabilidad de un restaurante, ya que prefiere hablar con el mesero. El mesero, es quien sirve de *facade*:
+
+```java
+public class Mesero {
+    
+    private Cocina cocina;
+    private Menu menu;
+    private Cuenta cuenta;
+    
+    public Mesero(){
+        this.cocina = this.cocina.getCocina();
+        this.menu = this.menu.getMenu();
+        this.cuenta = new Cuenta(5);        
+        System.out.println("Bienvenidos! ¿puedo tomar su orden?");  
+        
+    }
+    
+    public void ordenar(String comidaOBebida){
+        if (this.menu.existeEnMenu(comidaOBebida)){
+            MenuItem item = this.menu.getItem(comidaOBebida);
+            this.cuenta.agregarItem(item);
+            this.cocina.prepararPlatoOBebida(item);
+            
+        } else {
+            System.out.println("\t Lo sentimos, no tenemos en este momento <"+comidaOBebida+">");
+        }
+        
+    }
+    
+    void traerComida() {
+        System.out.println("Llevando comidas y bebidas a la mesa");
+        for(MenuItem mi:cuenta.getItemsCuenta()){
+            System.out.println("\t Colocando en mesa <"+mi.getNombre()+">");
+        }
+    }
+
+    void solicitarCuenta() {
+        System.out.println("Solicitando cuenta");
+        Double totalAPagar = this.cuenta.getTotalCuenta();
+    }
+
+    void pagar(Double pago) {
+        this.cuenta.pagar(pago);
+    }
+   
+    
+}
+
+```
  
+Todas las relaciones con los sistemas internos del restaurante son manejados por el mesero, permitiendo que el cliente final sea así (en este caso la clase ```Main```):
+
+```java
+public class Main {
+        public static void main(String[] args) {
+        Mesero mesero = new Mesero();
+        mesero.ordenar("agua");
+        mesero.ordenar("cerveza");   
+        mesero.ordenar("naranjada");
+        mesero.ordenar("hamburguesa");
+        mesero.ordenar("hot dog");
+        mesero.ordenar("pastel de chocolate");
+        mesero.traerComida();        
+        mesero.solicitarCuenta();
+        mesero.pagar(100d);
+        
+    }
+}
+```
+
+Al correr este código, se obtiene:
+
+```
+Creando cocina
+Creando el menú
+Creando cuenta para mesa <5> a las <Apr 21, 2017 4:25:02 PM>
+Bienvenidos! ¿puedo tomar su orden?
+	 En cocina preparando bebida <Agua>
+	 En cocina preparando bebida <Cerveza>
+	 Lo sentimos, no tenemos en este momento <naranjada>
+	 En cocina preparando bebida <Hamburguesa>
+	 En cocina preparando bebida <Hot Dog>
+	 Lo sentimos, no tenemos en este momento <pastel de chocolate>
+Llevando comidas y bebidas a la mesa
+	 Colocando en mesa <Agua>
+	 Colocando en mesa <Cerveza>
+	 Colocando en mesa <Hamburguesa>
+	 Colocando en mesa <Hot Dog>
+Solicitando cuenta
+	Resumen de la cuenta:
+	 	<Agua> 		 Q<10.0>
+	 	<Cerveza> 		 Q<25.0>
+	 	<Hamburguesa> 		 Q<20.0>
+	 	<Hot Dog> 		 Q<18.0>
+	 ** Total <73.0>
+Recibiendo <100.0>, por saldo de <73.0>
+Vuelto <27.0>
+Muchas gracias por visitarnos!
+```
+
+Es evidente lo mucho que simplificó la clase  ```Mesero``` al cliente final. Sin embargo, si lo necesitara, el cliente puede interactuar con los otros sistemas, si así lo quisiese. 
+
  
- Por su simplicidad, una ventaja de este patrón es que puede aplicarse en fases tardías de desarrollo sin involucrar cambios fundamentales en el código existente. 
+Por su simplicidad, una ventaja de este patrón es que puede aplicarse en fases tardías de desarrollo sin involucrar cambios fundamentales en el código existente. 
  
 
 

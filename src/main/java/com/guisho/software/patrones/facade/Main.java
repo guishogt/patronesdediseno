@@ -22,7 +22,7 @@ public class Main {
         mesero.ordenar("pastel de chocolate");
         mesero.traerComida();        
         mesero.solicitarCuenta();
-        mesero.pagar(300d);
+        mesero.pagar(100d);
         
     }
 }

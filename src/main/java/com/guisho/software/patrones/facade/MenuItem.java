@@ -9,8 +9,7 @@ package com.guisho.software.patrones.facade;
  *
  * @author lfernandez
  */
-public interface MenuItem {
-    
+public interface MenuItem {    
     public String getNombre();
     public Double getPrecio();
 }
