@@ -1904,6 +1904,104 @@ Por su simplicidad, una ventaja de este patrón es que puede aplicarse en fases 
  	
 ## 4.6 Proxy
 
+La traducción de *proxy* es apoderado, pero también se puede ver como embajador. Este patrón, muy sencillo en su intención y su implementación, pretende poner un intermediario entre un cliente y una clase a usarse. Es muy parecido a un *proxy* en redes, es simplemente algo que se pone en medio para realizar una tarea. 
+
+El caso más común es para implementar ciertos tipos de permisos, o tareas agregadas. Por ejemplo, no se quiere exponer toda la funcionalidad de una clase para el exterior, entonces se crea un *proxy* que hable con el cliente y con la clase. Un caso podría ser un *logger*.
+
+Es muy parecido al patrón adaptador, con la diferencia que el *proxy* expone la misma interfaz que el objeto al que cubre, mientras que el adaptador no. 
+
+Se seguirá con el ejemplo del mesero que se comenzó en el patrón *facade*. En ese caso se tenía una clase mesero, que servía de punto único de comunicación con el restaurante. Sucede que el restaurante ha tenido mucho éxito, y se tuvo que contratar a un mesero nuevo. El mesero que se contrató no tiene mucha experiencia, por lo que la administración decidió que el mesero nuevo estuviese por dos semanas bajo el mando de un mesero más experimentado. 
+
+Para lograr esto modificando la menor cantidad de código posible, el líder del proyecto decidió extraer una interfaz de ```Mesero``` que se llamará ```IMesero```, y crear un proxy para mesero, que se llamará ```MeseroExperimentado```:
+
+``` ```
+
+```java
+public interface IMesero {
+
+    void ordenar(String comidaOBebida);
+    void traerComida();
+    void solicitarCuenta();
+    void pagar(Double pago);
+}
+
+```
+
+Por lo que ```Mesero``` quedó así:
+ 
+```java
+public class Mesero implements IMesero {
+    
+    private Cocina cocina;
+    private Menu menu;
+    private Cuenta cuenta;
+    
+    public Mesero(){
+    ...
+```
+
+Y se creó el *proxy* llamado ```MeseroExperimentado```:
+
+```java
+public class MeseroExperimentado implements IMesero{
+    
+    IMesero meseroNuevo;
+    
+    public MeseroExperimentado(){
+        this.meseroNuevo=new Mesero();
+        System.out.println("Quiero comentarles que tendremos a un mesero en entrenamiento apoyándonos, si es un problema, hacérmelo saber.");
+    }
+
+    @Override
+    public void ordenar(String comidaOBebida) {
+        System.out.println("Mesero nuevo, por favor agregar <"+comidaOBebida+">");
+        this.meseroNuevo.ordenar(comidaOBebida);
+        
+    }
+
+    @Override
+    public void traerComida() {
+        System.out.println("Mesero nuevo, favor traer la comida ");
+        this.meseroNuevo.traerComida();
+    }
+
+    @Override
+    public void solicitarCuenta() {
+        System.out.println("Mesero nuevo, llevar la cuenta, y explicar bien cada gasto. ");
+        this.meseroNuevo.solicitarCuenta();
+    }
+
+    @Override
+    public void pagar(Double pago) {
+        System.out.println("Mesero nuevo, realizar el pago y agradecer a nuestros clientes");
+        this.meseroNuevo.pagar(pago);
+        System.out.println("Gracias por visitarnos y apoyarnos entrenando a nuestro mesero nuevo!");
+    }
+    
+}
+```
+
+Como puede notarse, dentro de ```MeseroExperimentado``` hay un ```Mesero``` y cada uno de los métodos de ```MeseroExperimentado``` lo que hace es agregar piezas de funcionalidad y llamar al mismo método de ```Mesero```. Ello permite a ```MeseroExperimentado``` controlar todas las llamadas, y hacer algo en caso de que el nuevo mesero no sepa que hacer. 
+
+Finalmente, el código cliente es idéntico a como estaba antes, salvo que en vez de llamar a ```Mesero``` se llama a ```MeseroExperimentado```:
+
+```java
+        IMesero mesero = new MeseroExperimentado();
+        mesero.ordenar("agua");
+        mesero.ordenar("cerveza");   
+        mesero.ordenar("naranjada");
+        mesero.ordenar("hamburguesa");
+        mesero.ordenar("hot dog");
+        mesero.ordenar("pastel de chocolate");
+        mesero.traerComida();        
+        mesero.solicitarCuenta();
+        mesero.pagar(100d);
+```
+ 
+ll
+```java
+```
+
 ## 4.7  Module
 
 # 5.  Patrones de comportamiento.  

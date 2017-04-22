@@ -11,7 +11,7 @@ import java.util.Arrays;
  *
  * @author lfernandez
  */
-public class Mesero {
+public class Mesero implements IMesero {
     
     private Cocina cocina;
     private Menu menu;
@@ -25,6 +25,7 @@ public class Mesero {
         
     }
     
+    @Override
     public void ordenar(String comidaOBebida){
         if (this.menu.existeEnMenu(comidaOBebida)){
             MenuItem item = this.menu.getItem(comidaOBebida);
@@ -37,19 +38,19 @@ public class Mesero {
         
     }
     
-    void traerComida() {
+    public void traerComida() {
         System.out.println("Llevando comidas y bebidas a la mesa");
         for(MenuItem mi:cuenta.getItemsCuenta()){
             System.out.println("\t Colocando en mesa <"+mi.getNombre()+">");
         }
     }
 
-    void solicitarCuenta() {
+    public void solicitarCuenta() {
         System.out.println("Solicitando cuenta");
         Double totalAPagar = this.cuenta.getTotalCuenta();
     }
 
-    void pagar(Double pago) {
+    public void pagar(Double pago) {
         this.cuenta.pagar(pago);
     }
     
