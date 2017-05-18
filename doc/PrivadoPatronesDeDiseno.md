@@ -804,7 +804,6 @@ Es un gran beneficio porque se puede controlar mejor la manera en la que```Tradu
 Hay muchas maneras de crear los Singletons, que pueden complicarse. En este ejemplo se utiliza un booleano estático, pero no siempre es necesario, se pudo  haber inicializado ```traductorInstance``` como ```null```, y en vez de verificar la variable booleana, verificar si la instancia es null o no.
 
 
-TODO Do Code
 ```java
 public class Traductor{
 
