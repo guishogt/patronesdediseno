@@ -1,17 +1,14 @@
 
 # 1. Introducción. 
 
-Notes & Todo:
-Términos en inglés y en español. 
-Usando ejemplos. 
-Ejemplos propios. 
-They facilitate communication
-
-# 2.  Los patrones de diseño
-
 El software es un tema muy amplio que tiene bastantes esquinas interesantes para digerir. Uno de los puntos cruciales de todo el ecosistema técnico y de negocios del software es la calidad del código. Crear código de alta calidad no es fácil, y para cualquier profesional en el área, los fundamentos de hacer buen software siempre deben ser revisados constantemente. Porque, aun con la avalancha de nuevos lenguajes de programación, paradigmas y *frameworks*, los fundamentos de hacer buen software son similares. 
 
 En el caso específico de la programación orientada a objetos, existen desde hace un par de décadas los llamados patrones de diseño. Estos patrones, que usualmente aparecen como consecuencia de identificar anti-patrones. 
+
+
+# 2.  Los patrones de diseño
+
+
 
 En sí, un patrón de diseño es una solución puntual a un problema común y repetido de diseño. Para que sea considerado como tal, debe tener una amplia cantidad de escenarios donde resuelva estos problemas. 
 
@@ -247,11 +244,6 @@ Una manera de resolver el problema puede ser algo así:
 ```java
 
 public class MainClient {
-
-public MainClient(){
-
-     }
-
 	public traducirNumero(String idioma, int numero){
 		if (idioma.equals("español")){
 		  switch (numero){
@@ -260,7 +252,6 @@ public MainClient(){
 		    ....
 		   }
 		}
-
 		if (idioma.equals("english")){
 		    switch (numero){
 		     case 0: return "one";
@@ -268,23 +259,18 @@ public MainClient(){
 		    ....
 
 		    }
-
 		} 
-
 		if (idioma.equals("deutsch")){
-
 		    switch (numero){
 		     case 0: return "eins";
 		     case 1: return "zwei";
 		    ....
 		    }
 		}
-
 	}//traducirNumero
        
 
 public static void main(String args[]){
-
 	MainClient mc = new MainClient();
 	System.out.println(mc.traducirNumero("espanol",1));
 
@@ -306,7 +292,6 @@ Siguiendo la escuela de programación orientada a objetos, una solución natural
 
 public abstract class Traductor{
    public abstract String traducirNumero(int numero);
-
 }
 
 ```
@@ -322,16 +307,12 @@ public class TraductorEspanol extends Traductor {
     }
 
     public String traducirNumero(int numero){
-
        switch(numero){
        	   case 1: return "uno";
        	   case 2: return "dos";
        	   ...
-
        }
-
     }	
-
 }
 ```
 
@@ -339,20 +320,16 @@ La clase para el inglés sería:
 
 ```java
 public class TraductorIngles extends Traductor {
-
     public TraductorIngles(){
        super();
        ...
-
     }
 
     public String traducirNumero(int numero){
-
        switch(numero){
        	   case 1: return "one";
        	   case 2: return "two";
        	   ...
-
        }
     }	
 }
@@ -376,18 +353,14 @@ public class MainClient {
 		if (idioma.equals("español")){
 			traductor = new TraductorEspanol();
 		}
-
 		if (idioma.equals("ingles")){
 			traductor = new TraductorIngles();
 		} 
-
 		if (idioma.equals("aleman")){
 			traductor = new TraductorAleman();
 		}
-
 		String toReturn traductor.traducirNumero(numero);
        return toReturn;
-
 	}//traducirNumero
 
      public static void main(String args[]){
@@ -406,9 +379,7 @@ El *Factory Pattern* no ha aparecido, Es tiempo de irlo a llamar. Traduceme est�
 ```java
 
 public class TraductorFactory {
-
     public TraductorFactory(){
-
     }
 
     public static Traductor createTraductor(String idioma){
@@ -421,7 +392,6 @@ public class TraductorFactory {
         if (idioma.equals("aleman")){
             return new TraductorAleman();
         }
-
         return null;
     }
 
@@ -433,7 +403,6 @@ public class TraductorFactory {
 
 ```java
 public class MainClient {
-
      String idioma;
      public static void main(Strin []args){
 	  Traductor traductor = TraductorFactory.createTraductor("espanol");
@@ -445,7 +414,7 @@ public class MainClient {
 
 MainClient se ha visto dramáticamente reducido, y su código es muy fácil de leer. Quien quiera usar un traductor simplemente hará llamar a ```Traduceme```. ```Traduceme``` sabe el idioma que eligieron, pero no sabe que subclase de Traductor instanciar, pero sabiendo el idioma ```TraductorFactory``` sabe exactamente qué instancia de Traductor crear. Si la aplicación desea cambiar de idioma simplemente le envía otro parámetro a ```Traduceme``` y listo. También agregar idiomas es más manejable que antes. 
 
-El *Factory Pattern* esconde al usuario final del código la desición de qué sublclase instanciar, y promueve el encapsulamiento de las partes más variables del sistema. En términos generales, una fábrica abstracta consiste de las siguientes partes:
+El *Factory Pattern* esconde al usuario final del código la decisión de qué sublclase instanciar, y promueve el encapsulamiento de las partes más variables del sistema. En términos generales, una fábrica abstracta consiste de las siguientes partes:
 
 Un cliente, que es el que llama a la fábrica (en nuestro caso MainClient).
 
@@ -464,25 +433,20 @@ Básicamente lo que hace este patrón es unir varios Factory Methods, delegando 
 
 Ahora se hará un sencillo reloj que muestra la hora actual. La hora puede ser desplegada en formato de 24 horas o puede ser desplegada en formato AM/PM. Recordando que es a manera de ejemplo, se utilizará la clase Date de una manera no aconsejable. Esto para omitir código de plomería extra, y facilidad de lectura. Como en el caso del diccionario, se hará una clase abstracta de Reloj y dos implementaciones para cada una de los formatos, y una clase que contenga el método del Factory Method. El código sería así:
 
-```java
-
 La clase Reloj:
 
+```java
 public abstract class Reloj {
     abstract String dameLaHora();
 }
-
 ```
 La clase que da la hora en formato AM/PM:
 
 ```java
 public class RelojAmPm extends Reloj{
-
-    public RelojAmPm(){
-    }
-
+	...
+	
     public String dameLaHora() {
-
         Date d = new Date();
         int hora = d.getHours();
         int minutos = d.getMinutes();
@@ -495,7 +459,6 @@ public class RelojAmPm extends Reloj{
         }
         return tr;
     }
-
 }
 ```
 
@@ -504,7 +467,7 @@ La que da la hora en formato de 24 horas:
 ```java
 
 public class Reloj24Hrs extends Reloj {
-
+...
     public String dameLaHora() {
 		 Date d = new Date();
         int hora = d.getHours();
@@ -514,9 +477,7 @@ public class Reloj24Hrs extends Reloj {
         
         tr = "Son la(s) " + hora + ":" + minutos + ":" + segundos + " ";
         return tr;
-
     }
-
 }
 ```
 
@@ -525,19 +486,13 @@ Ahora la clase que contiene la el método que elige las instancias. A diferencia
 ```java
 
 public class RelojFactory {
-
     public static final int RELOJ_AM_PM=0;
     public static final int RELOJ_24_HRS=1;
-
-    public RelojFactory(){
-
-    }
-
+	...
     public static Reloj createReloj(int tipoDeReloj){
         if (tipoDeReloj==RelojFactory.RELOJ_24_HRS){
             return new Reloj24Hrs();
         }
-
         if (tipoDeReloj==RelojFactory.RELOJ_AM_PM){
             return new RelojAmPm();
         }
@@ -551,7 +506,6 @@ Y finalmente la clase cliente, que será la usuario final:
 ```java
 
 public class MainClient {
-
     public static void main(String[] args) {
         Reloj r = RelojFactory.createReloj(RelojFactory.RELOJ_24_HRS);
         System.out.println(r.dameLaHora());
@@ -565,13 +519,11 @@ Ahora se crea una *Abstract Factory*, que será llamada *Locale*.
 
 ```java
 public abstract class AbstractLocaleFactory {
-
     public static final String US="ESTADOS_UNIDOS";
     public static final String GT="GUATEMALA"
     String pais;
     public abstract Traductor createTraductor();
-    public abstract Reloj createReloj();
-    
+    public abstract Reloj createReloj();   
     public String getPais(){
         return this.pais;
     }
@@ -579,7 +531,6 @@ public abstract class AbstractLocaleFactory {
     public void setPais(String pais){
         this.pais = pais;
     }
-
 }
 ```
 
@@ -590,15 +541,12 @@ Ahora se procede a implementar la clase LocaleGuatemalaFactory, que se ve así:
 ```java
 
 public class LocaleGuatemalaFactory extends AbstractLocaleFactory{
-
     public LocaleGuatemalaFactory(){
         this.pais=this.GT;
     }
-
     public Traductor createTraductor() {
         return TraductorFactory.createTraductor("espanol");
     }
-
     public Reloj createReloj() {
         return RelojFactory.createReloj(RelojFactory.RELOJ_24_HRS);
     }
@@ -610,19 +558,15 @@ Y la respectiva para Estados Unidos:
 
 ```java
 public class LocaleEstadosUnidosFactory extends AbstractLocaleFactory{
-
     public LocaleEstadosUnidosFactory(){
         this.pais=AbstractLocaleFactory.US;
     }
-
     public Traductor createTraductor() {
         return TraductorFactory.createTraductor("ingles");
     }
-
     public Reloj createReloj() {
         return RelojFactory.createReloj(RelojFactory.RELOJ_AM_PM);
     }
-
 }
 ```
 
@@ -630,7 +574,7 @@ Ahora en el cliente, si se desea las cosas como se verían en Guatemala, simplem
 
 ```java
 public class MainClient {
-
+	...
     public static void main(String[] args) {
         Reloj reloj = null;
         Traductor traductor = null;
@@ -651,13 +595,11 @@ El resultado de correr el codigo anterior es:
 ```
 1=uno
 Son las 21:50:17
-
 ```
 
 Si se cambia la siguiente línea:
 
 ```java
-
         AbstractLocaleFactory localeFactory = new LocaleGuatemalaFactory();
 ```        
 
@@ -1996,11 +1938,13 @@ Finalmente, el código cliente es idéntico a como estaba antes, salvo que en ve
         mesero.pagar(100d);
 ```
  
+
+
+<!--
+
 ll
 ```java
 ```
-
-<!--
 # 5.  Patrones de comportamiento.  
 
 ## 5.1 Observer
