@@ -232,11 +232,11 @@ Esto es mucho más sencillo de leer (aparte que la línea se alarga un poco, aun
 
 De nuevo, este no es el Builder de GoF, pero es otro concepto de *builder*, que se expone para que se vea la flexibilidad que nuevos patrones pueden traer. 
 
-## 3.2 Lazy initialization
+<!--## 3.2 Lazy initialization-->
 
 ## 3.3 Factory
 
-**TODO** definir mejor la teoría de este patrón. 
+<!-- **TODO** definir mejor la teoría de este patrón. -->
 
 Para ilustrar este patrón, se hará uso de un ejemplo. Supóngase que la tarea que se está por hacer es crear un traductor que devuelva los números del cero al diez en tres idiomas: inglés, español, y alemán. Existen muchísimas maneras de hacer esto. Al final, se desea un método que reciba un entero entre 0 y 10 y que devuelva una cadena con el nombre de dicho número en el idioma que se esté trabajando. 
 
@@ -407,27 +407,25 @@ El *Factory Pattern* no ha aparecido, Es tiempo de irlo a llamar. Traduceme est�
 
 public class TraductorFactory {
 
-     public TraductorFactory(){
-     }
+    public TraductorFactory(){
 
-	public static Traductor createTraductor(int numero){
+    }
 
-		Traductor traductor = null;
+    public static Traductor createTraductor(String idioma){
+        if (idioma.equals("espanol")){
+            return new TraductorEspanol();
+        }
+        if (idioma.equals("ingles")){
+            return new TraductorIngles();
+        }
+        if (idioma.equals("aleman")){
+            return new TraductorAleman();
+        }
 
-		if (idioma=="español"){
-			traductor = new TraductorEspanol();
-		}
-		if (idioma=="english"){
-			traductor = new TraductorIngles();
-		} 
-		if (idioma=="deutsch"){
-			traductor = new TraductorAleman();
-		}
-		return traductor;
+        return null;
+    }
 
-	}
-
-}//de la clase
+}
 
 ```
 
@@ -2002,8 +2000,7 @@ ll
 ```java
 ```
 
-## 4.7  Module
-
+<!--
 # 5.  Patrones de comportamiento.  
 
 ## 5.1 Observer
@@ -2030,3 +2027,4 @@ Recordar que los patrones aquí expuestos son para OOP, no para funcional u otro
 Afilar el machete
 
 
+-->
