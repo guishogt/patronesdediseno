@@ -806,39 +806,23 @@ Hay muchas maneras de crear los Singletons, que pueden complicarse. En este ejem
 
 ```java
 public class Traductor{
-
       private static  Traductor traductorInstance=null;
 
-      /**
-
-       *Notar que el constructor es privado!
-
-      */
 
       private Traductor(){
-
           //cargar un diccionario a memoria  a través de un WebService.
-
      }
 
     public static Traductor getTraductor(){
-
            if (! Traductor.INSTANCE==null){
-
                  Traductor.traductorInstance= new Traductor();
-
            }
-
           return Traductor.traductorInstance;
-
    	}
 
     public String translate(String toTranslate){
-
        //mucho código bonito va aquí
-
     } 
-
 }
 ```
 
@@ -847,9 +831,7 @@ O, para hacer las cosas más sencillas (que no siempre conviene) se podría habe
 ```java
 
 public class Traductor{
-
       private static  Traductor traductorInstance=new Traductor();
-
       /**
        *Notar que el constructor es privado!
       */
@@ -871,18 +853,18 @@ public class Traductor{
 
 Fácil ¿no? Mmm, pues se puede complicar. En Java por ejemplo, todavía se podría obtener una copia de traductor así:
 
-```java
+
 Traductor t = (Traductor)Traductor.getTraductor().clone();
+```
+
 
 Para evitar esto tendríamos que añadir las siguietnes líneas a nuestra clase Traductor
-
+```java
      public Object clone() throws CloneNotSupportedException {
-
          throw new CloneNotSupportedException();
-
        }
-       
-```      
+```       
+      
 
 
 También alguien podría extender la clase y volver público el constructor. Para evitar esto sería buena idea declarar nuestra clase como final.
