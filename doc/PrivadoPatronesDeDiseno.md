@@ -832,9 +832,7 @@ O, para hacer las cosas más sencillas (que no siempre conviene) se podría habe
 
 public class Traductor{
       private static  Traductor traductorInstance=new Traductor();
-      /**
-       *Notar que el constructor es privado!
-      */
+
       private Traductor(){
           //cargar un diccionario a memoria  a través de un WebService.
      }
@@ -842,7 +840,6 @@ public class Traductor{
     public static Traductor getTraductor(){
            return Traductor.traductorInstance;
    	}
-
     public String translate(String toTranslate){
        //mucho código bonito va aquí
     } 
