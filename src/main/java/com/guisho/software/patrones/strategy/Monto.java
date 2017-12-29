@@ -20,7 +20,6 @@ public class Monto {
         this.cantidad=cantidad;
     }
     
-
     public String getMoneda() {
         return moneda;
     }
